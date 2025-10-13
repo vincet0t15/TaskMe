@@ -14,6 +14,7 @@ class SpaceController extends Controller
     public function index(Request $request)
     {
         $spaces = Space::query()
+            ->with('list')
             ->where('user_id', Auth::id())
             ->when($request->search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");

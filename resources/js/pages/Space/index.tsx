@@ -21,6 +21,7 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { ChevronDown, ChevronRight, PlusIcon } from 'lucide-react';
 import React, { KeyboardEventHandler, useState } from 'react';
 import { CreateSpace } from './create';
+import { CreateList } from './createList';
 import DeleteSpaces from './delete';
 import { EditSpace } from './edit';
 
@@ -41,9 +42,11 @@ interface Props {
 }
 
 export default function SpaceIndex({ spaces, filters }: Props) {
+    console.log(spaces);
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
+    const [openCreateList, setOpenCreateList] = useState(false);
     const [space, setSpace] = useState<SpaceInterface>();
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
@@ -73,6 +76,10 @@ export default function SpaceIndex({ spaces, filters }: Props) {
         setOpenDelete(true);
     };
 
+    const handleClickAddList = (space: SpaceInterface) => {
+        setSpace(space);
+        setOpenCreateList(true);
+    };
     const toggleExpand = (id: number) => {
         setExpandedRow((prev) => (prev === id ? null : id));
     };
@@ -137,6 +144,18 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                             <TableCell className="text-center font-medium">
                                                 <div className="flex items-center justify-center gap-2">
                                                     <span
+                                                        className="text-blue-500"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClickAddList(
+                                                                item,
+                                                            );
+                                                        }}
+                                                    >
+                                                        Add list
+                                                    </span>
+                                                    |
+                                                    <span
                                                         className="cursor-pointer text-teal-500 hover:font-bold hover:text-teal-700"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -164,15 +183,19 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                         </TableRow>
 
                                         {/* Collapsible Row */}
-                                        {expandedRow === item.id && (
-                                            <TableRow className="bg-gray-900/40 text-sm">
-                                                <TableCell className="text-gray-300">
-                                                    <span className="ml-6">
-                                                        1
-                                                    </span>
-                                                </TableCell>
-                                            </TableRow>
-                                        )}
+                                        {expandedRow === item.id &&
+                                            item.list.map((data, index) => (
+                                                <TableRow
+                                                    className="bg-gray-900/40 text-sm"
+                                                    key={index}
+                                                >
+                                                    <TableCell className="text-gray-300">
+                                                        <span className="ml-6">
+                                                            {data.name}
+                                                        </span>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
                                     </React.Fragment>
                                 ))
                             ) : (
@@ -211,6 +234,14 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                     space={space}
                     open={openDelete}
                     setOpen={setOpenDelete}
+                />
+            )}
+
+            {openCreateList && space && (
+                <CreateList
+                    open={openCreateList}
+                    setOpen={setOpenCreateList}
+                    space={space}
                 />
             )}
         </AppLayout>

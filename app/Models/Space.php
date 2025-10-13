@@ -20,6 +20,11 @@ class Space extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function list()
+    {
+        return $this->hasMany(ListTask::class);
+    }
+
     protected static function booted()
     {
         static::creating(function ($project) {
