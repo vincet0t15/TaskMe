@@ -23,13 +23,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('spaces', [SpaceController::class, 'store'])->name('spaces.store');
     Route::put('spaces/{space}', [SpaceController::class, 'update'])->name('spaces.update');
     Route::delete('spaces/{space}', [SpaceController::class, 'destroy'])->name('space.destroy');
-    Route::get('spaces/{space}', [SpaceController::class, 'show'])->name('spaces.show');
 
 
     // LIST
     Route::post('lists', [ListTaskController::class, 'store'])->name('list.store');
     Route::put('lists/{list}', [ListTaskController::class, 'update'])->name('list.update');
     Route::delete('lists/{list}', [ListTaskController::class, 'destroy'])->name('list.destroy');
+    Route::get('lists/{list}', [ListTaskController::class, 'show'])->name('lists.show');
 });
 
 require __DIR__ . '/settings.php';

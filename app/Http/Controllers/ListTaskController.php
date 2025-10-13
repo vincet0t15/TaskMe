@@ -6,6 +6,7 @@ use App\Http\Requests\TaskListRequest\TaskListStoreRequest;
 use App\Http\Requests\TaskListRequest\TaskListUpdateRequest;
 use App\Models\ListTask;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ListTaskController extends Controller
 {
@@ -31,5 +32,10 @@ class ListTaskController extends Controller
         $list->delete();
 
         return redirect()->back()->withSuccess('List deleted successfully');
+    }
+
+    public function show(ListTask $list)
+    {
+        return Inertia::render('List/show');
     }
 }

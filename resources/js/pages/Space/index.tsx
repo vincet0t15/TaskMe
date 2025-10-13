@@ -12,9 +12,11 @@ import {
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
+import lists from '@/routes/lists';
 import spaces from '@/routes/spaces';
 import { type BreadcrumbItem } from '@/types';
 import { FilterProps } from '@/types/filter';
+import { ListInterface } from '@/types/List';
 import { PaginatedDataResponse } from '@/types/pagination';
 import { SpaceInterface } from '@/types/Space';
 import { Head, router, useForm } from '@inertiajs/react';
@@ -41,7 +43,6 @@ interface Props {
 }
 
 export default function SpaceIndex({ spaces, filters }: Props) {
-    console.log(spaces);
     const [openCreate, setOpenCreate] = useState(false);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
@@ -65,6 +66,9 @@ export default function SpaceIndex({ spaces, filters }: Props) {
         setExpandedRow((prev) => (prev === id ? null : id));
     };
 
+    const handleClickChildName = (list: ListInterface) => {
+        router.get(lists.show.url({ list: list.id }));
+    };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -139,7 +143,14 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                                     key={index}
                                                 >
                                                     <TableCell className="text-gray-300">
-                                                        <span className="ml-6 cursor-pointer hover:font-bold hover:text-white">
+                                                        <span
+                                                            className="ml-6 cursor-pointer hover:font-bold hover:text-white"
+                                                            onClick={() =>
+                                                                handleClickChildName(
+                                                                    data,
+                                                                )
+                                                            }
+                                                        >
                                                             {data.name}
                                                         </span>
                                                     </TableCell>
