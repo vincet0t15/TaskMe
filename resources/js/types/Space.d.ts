@@ -1,12 +1,12 @@
 import { User } from '.';
 
-export interface ProjectInterface {
+export interface SpaceInterface {
     id: number;
     name: string;
     user_id: number;
     user: User;
 }
 
-export type ProjectTypes = {
+export type SpaceType = {
     name: string;
 };

@@ -11,7 +11,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import project from '@/routes/project';
+
+import spaces from '@/routes/spaces';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
@@ -24,8 +25,8 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Project',
-        href: project.index.url(),
+        title: 'My Space',
+        href: spaces.index.url(),
         icon: LayoutGrid,
     },
 ];
