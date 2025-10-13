@@ -18,30 +18,34 @@ import { FilterProps } from '@/types/filter';
 import { PaginatedDataResponse } from '@/types/pagination';
 import { SpaceInterface } from '@/types/Space';
 import { Head, router, useForm } from '@inertiajs/react';
-import { PlusIcon } from 'lucide-react';
-import { KeyboardEventHandler, useState } from 'react';
+import { ChevronDown, ChevronRight, PlusIcon } from 'lucide-react';
+import React, { KeyboardEventHandler, useState } from 'react';
 import { CreateSpace } from './create';
 import DeleteSpaces from './delete';
 import { EditSpace } from './edit';
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
         href: dashboard().url,
     },
     {
-        title: 'Porjects',
+        title: 'Projects',
         href: spaces.index.url(),
     },
 ];
+
 interface Props {
     spaces: PaginatedDataResponse<SpaceInterface>;
     filters: FilterProps;
 }
+
 export default function SpaceIndex({ spaces, filters }: Props) {
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [space, setSpace] = useState<SpaceInterface>();
+    const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
     const { data, setData } = useForm({
         search: filters.search || '',
@@ -68,13 +72,19 @@ export default function SpaceIndex({ spaces, filters }: Props) {
         setSpace(space);
         setOpenDelete(true);
     };
+
+    const toggleExpand = (id: number) => {
+        setExpandedRow((prev) => (prev === id ? null : id));
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                {/* Header */}
                 <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <Button
-                        variant={'secondary'}
+                        variant="secondary"
                         className="cursor-pointer rounded-sm"
                         onClick={() => setOpenCreate(true)}
                     >
@@ -91,7 +101,7 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                     </div>
                 </div>
 
-                {/* TABLE */}
+                {/* Table */}
                 <div className="overflow-hidden rounded-sm border">
                     <Table>
                         <TableHeader className="bg-accent">
@@ -107,33 +117,63 @@ export default function SpaceIndex({ spaces, filters }: Props) {
 
                         <TableBody>
                             {spaces.data.length > 0 ? (
-                                spaces.data.map((data, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell className="font-medium">
-                                            {data.name}
-                                        </TableCell>
-                                        <TableCell className="text-center font-medium">
-                                            <div className="flex items-center justify-center gap-2">
-                                                <span
-                                                    className="cursor-pointer text-teal-500 hover:font-bold hover:text-teal-700"
-                                                    onClick={() =>
-                                                        handleClickEdit(data)
-                                                    }
-                                                >
-                                                    Edit
-                                                </span>
-                                                |
-                                                <span
-                                                    onClick={() =>
-                                                        handleClickDelete(data)
-                                                    }
-                                                    className="hover:font:bold cursor-pointer text-orange-500 hover:text-orange-700"
-                                                >
-                                                    Delete
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
+                                spaces.data.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        {/* Main Row */}
+                                        <TableRow
+                                            className="cursor-pointer transition hover:bg-accent/20"
+                                            onClick={() =>
+                                                toggleExpand(item.id)
+                                            }
+                                        >
+                                            <TableCell className="flex items-center gap-2 font-medium">
+                                                {expandedRow === item.id ? (
+                                                    <ChevronDown size={16} />
+                                                ) : (
+                                                    <ChevronRight size={16} />
+                                                )}
+                                                {item.name}
+                                            </TableCell>
+                                            <TableCell className="text-center font-medium">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <span
+                                                        className="cursor-pointer text-teal-500 hover:font-bold hover:text-teal-700"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClickEdit(
+                                                                item,
+                                                            );
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </span>
+                                                    |
+                                                    <span
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleClickDelete(
+                                                                item,
+                                                            );
+                                                        }}
+                                                        className="cursor-pointer text-orange-500 hover:text-orange-700"
+                                                    >
+                                                        Delete
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+
+                                        {/* Collapsible Row */}
+                                        {expandedRow === item.id && (
+                                            <TableRow className="bg-gray-900/40 text-sm">
+                                                <TableCell className="text-gray-300">
+                                                    <span className="ml-6">
+                                                        1
+                                                    </span>
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </React.Fragment>
                                 ))
                             ) : (
                                 <TableRow>
@@ -148,14 +188,17 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                         </TableBody>
                     </Table>
                 </div>
+
+                {/* Pagination */}
                 <div>
                     <Pagination data={spaces} />
                 </div>
             </div>
+
+            {/* Modals */}
             {openCreate && (
                 <CreateSpace open={openCreate} setOpen={setOpenCreate} />
             )}
-
             {openEdit && space && (
                 <EditSpace
                     space={space}
@@ -163,7 +206,6 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                     setOpen={setOpenEdit}
                 />
             )}
-
             {openDelete && space && (
                 <DeleteSpaces
                     space={space}

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\SpaceRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class SpaceUpdateRequest extends FormRequest
@@ -27,7 +28,10 @@ class SpaceUpdateRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('spaces', 'name')->ignore($id),
+                Rule::unique('spaces', 'name')
+                    ->where('user_id', Auth::id())
+                    ->whereNull('deleted_at')
+                    ->ignore($id),
             ]
         ];
     }

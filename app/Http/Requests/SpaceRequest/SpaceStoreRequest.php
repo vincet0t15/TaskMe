@@ -27,7 +27,8 @@ class SpaceStoreRequest extends FormRequest
             'name' => [
                 'required',
                 Rule::unique('spaces', 'name')
-                    ->where('user_id', Auth::user()->id),
+                    ->where('user_id', Auth::user()->id)
+                    ->whereNull('deleted_at'),
             ],
         ];
     }

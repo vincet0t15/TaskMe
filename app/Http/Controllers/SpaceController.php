@@ -52,4 +52,10 @@ class SpaceController extends Controller
 
         return redirect()->back()->withSuccess('Space deleted successfully');
     }
+
+    public function show(Space $space)
+    {
+
+        return Inertia::render('Space/show');
+    }
 }
