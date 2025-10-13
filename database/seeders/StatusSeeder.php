@@ -1,0 +1,29 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+class StatusSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $statuses = [
+            ['name' => 'Backlog',     'color' => '#6b7280'], // Gray
+            ['name' => 'To Do',       'color' => '#3b82f6'], // Blue
+            ['name' => 'In Progress', 'color' => '#f59e0b'], // Amber
+            ['name' => 'Blocked',     'color' => '#ef4444'], // Red
+            ['name' => 'In Review',   'color' => '#8b5cf6'], // Purple
+            ['name' => 'Completed',   'color' => '#10b981'], // Green
+            ['name' => 'Cancelled',   'color' => '#9ca3af'], // Light Gray
+        ];
+
+
+        DB::table('statuses')->insert($statuses);
+    }
+}
