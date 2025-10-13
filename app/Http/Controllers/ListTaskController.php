@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskListRequest\TaskListStoreRequest;
+use App\Http\Requests\TaskListRequest\TaskListUpdateRequest;
 use App\Models\ListTask;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,7 @@ class ListTaskController extends Controller
         return redirect()->back()->withSuccess('List create successfully');
     }
 
-    public function update(Request $request, ListTask $list)
+    public function update(TaskListUpdateRequest $request, ListTask $list)
     {
         $list->update(['name' => $request->name]);
 

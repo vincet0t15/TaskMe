@@ -26,6 +26,7 @@ export function EditList({ open, setOpen, list }: Props) {
     const { data, setData, put, processing, reset, errors } =
         useForm<ListTypes>({
             name: list.name,
+            space_id: list.space_id,
         });
 
     const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {

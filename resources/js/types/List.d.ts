@@ -1,6 +1,7 @@
 export interface ListInterface {
     id: number;
     name: string;
+    space_id: number;
 }
 
 export type ListTypes = {
