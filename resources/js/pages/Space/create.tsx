@@ -45,7 +45,10 @@ export function CreateSpace({ open, setOpen }: Props) {
     };
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent
+                className="sm:max-w-[425px]"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <DialogHeader>
                     <DialogTitle>Create Space</DialogTitle>
                     <DialogDescription>

@@ -48,7 +48,10 @@ export function CreateList({ open, setOpen, space }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent
+                className="sm:max-w-[425px]"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <DialogHeader>
                     <DialogTitle>Create List</DialogTitle>
                     <DialogDescription>

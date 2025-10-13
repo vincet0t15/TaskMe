@@ -5,5 +5,5 @@ export interface ListInterface {
 
 export type ListTypes = {
     name: string;
-    space_id: number;
+    space_id?: number;
 };

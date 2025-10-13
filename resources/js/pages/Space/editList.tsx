@@ -1,3 +1,4 @@
+import ListTaskController from '@/actions/App/Http/Controllers/ListTaskController';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,9 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import spaces from '@/routes/spaces';
-import { SpaceInterface, SpaceType } from '@/types/Space';
-
+import { ListInterface, ListTypes } from '@/types/List';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { ChangeEventHandler, FormEventHandler } from 'react';
@@ -21,22 +20,22 @@ import { toast } from 'sonner';
 interface Props {
     open: boolean;
     setOpen: (open: boolean) => void;
-    space: SpaceInterface;
+    list: ListInterface;
 }
-export function EditSpace({ open, setOpen, space }: Props) {
-    const { data, setData, processing, put, reset, errors } =
-        useForm<SpaceType>({
-            name: space.name,
+export function EditList({ open, setOpen, list }: Props) {
+    const { data, setData, put, processing, reset, errors } =
+        useForm<ListTypes>({
+            name: list.name,
         });
 
-    const hanleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        put(spaces.update.url(space.id), {
+        put(ListTaskController.update.url({ list: list.id }), {
             onSuccess: (response: { props: FlashProps }) => {
                 toast.success(response.props.flash?.success);
                 reset();
@@ -44,6 +43,7 @@ export function EditSpace({ open, setOpen, space }: Props) {
             },
         });
     };
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent
@@ -51,31 +51,29 @@ export function EditSpace({ open, setOpen, space }: Props) {
                 onClick={(e) => e.stopPropagation()}
             >
                 <DialogHeader>
-                    <DialogTitle>Edit Space</DialogTitle>
+                    <DialogTitle>Create List</DialogTitle>
                     <DialogDescription>
-                        Fill out the details below to edit spaces. Click save
-                        when you’re ready to add it.
+                        Add a new list to your space. Fill out the details below
+                        and click save when you’re ready.
                     </DialogDescription>
                 </DialogHeader>
+
                 <form onSubmit={submit}>
                     <div className="grid gap-4">
                         <div className="grid gap-3">
-                            <Label htmlFor="name-1">Space Name</Label>
+                            <Label htmlFor="name-1">Name</Label>
                             <Input
+                                onChange={handleInputChange}
                                 name="name"
                                 value={data.name}
-                                onChange={hanleChangeInput}
-                                placeholder="Enter Space Name"
+                                placeholder="Enter list name"
                             />
                             <InputError message={errors.name} />
                         </div>
                     </div>
-
                     <DialogFooter className="mt-4">
                         <DialogClose asChild>
-                            <Button variant="outline" type="button">
-                                Cancel
-                            </Button>
+                            <Button variant="outline">Cancel</Button>
                         </DialogClose>
                         <Button
                             variant={'default'}
@@ -85,7 +83,7 @@ export function EditSpace({ open, setOpen, space }: Props) {
                             {processing && (
                                 <LoaderCircle className="h-4 w-4 animate-spin" />
                             )}
-                            {processing ? 'Saving...' : 'Save Changes'}
+                            {processing ? 'Creating list' : 'Create list'}
                         </Button>
                     </DialogFooter>
                 </form>

@@ -28,6 +28,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // LIST
     Route::post('lists', [ListTaskController::class, 'store'])->name('list.store');
+    Route::put('lists/{list}', [ListTaskController::class, 'update'])->name('list.update');
+    Route::delete('lists/{list}', [ListTaskController::class, 'destroy'])->name('list.destroy');
 });
 
 require __DIR__ . '/settings.php';

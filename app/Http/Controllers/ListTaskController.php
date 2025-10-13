@@ -17,4 +17,18 @@ class ListTaskController extends Controller
 
         return redirect()->back()->withSuccess('List create successfully');
     }
+
+    public function update(Request $request, ListTask $list)
+    {
+        $list->update(['name' => $request->name]);
+
+        return redirect()->back()->withSuccess('List updated successfully');
+    }
+
+    public function destroy(ListTask $list)
+    {
+        $list->delete();
+
+        return redirect()->back()->withSuccess('List deleted successfully');
+    }
 }

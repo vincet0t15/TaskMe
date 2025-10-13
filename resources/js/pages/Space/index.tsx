@@ -21,9 +21,8 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { ChevronDown, ChevronRight, PlusIcon } from 'lucide-react';
 import React, { KeyboardEventHandler, useState } from 'react';
 import { CreateSpace } from './create';
-import { CreateList } from './createList';
-import DeleteSpaces from './delete';
-import { EditSpace } from './edit';
+import { DropDownChild } from './dropDownChild';
+import { DropDownParent } from './dropDownParent';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -44,10 +43,6 @@ interface Props {
 export default function SpaceIndex({ spaces, filters }: Props) {
     console.log(spaces);
     const [openCreate, setOpenCreate] = useState(false);
-    const [openEdit, setOpenEdit] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-    const [openCreateList, setOpenCreateList] = useState(false);
-    const [space, setSpace] = useState<SpaceInterface>();
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
     const { data, setData } = useForm({
@@ -66,20 +61,6 @@ export default function SpaceIndex({ spaces, filters }: Props) {
         }
     };
 
-    const handleClickEdit = (space: SpaceInterface) => {
-        setSpace(space);
-        setOpenEdit(true);
-    };
-
-    const handleClickDelete = (space: SpaceInterface) => {
-        setSpace(space);
-        setOpenDelete(true);
-    };
-
-    const handleClickAddList = (space: SpaceInterface) => {
-        setSpace(space);
-        setOpenCreateList(true);
-    };
     const toggleExpand = (id: number) => {
         setExpandedRow((prev) => (prev === id ? null : id));
     };
@@ -143,41 +124,9 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                             </TableCell>
                                             <TableCell className="text-center font-medium">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <span
-                                                        className="text-blue-500"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleClickAddList(
-                                                                item,
-                                                            );
-                                                        }}
-                                                    >
-                                                        Add list
-                                                    </span>
-                                                    |
-                                                    <span
-                                                        className="cursor-pointer text-teal-500 hover:font-bold hover:text-teal-700"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleClickEdit(
-                                                                item,
-                                                            );
-                                                        }}
-                                                    >
-                                                        Edit
-                                                    </span>
-                                                    |
-                                                    <span
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleClickDelete(
-                                                                item,
-                                                            );
-                                                        }}
-                                                        className="cursor-pointer text-orange-500 hover:text-orange-700"
-                                                    >
-                                                        Delete
-                                                    </span>
+                                                    <DropDownParent
+                                                        space={item}
+                                                    />
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -193,6 +142,13 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                                         <span className="ml-6">
                                                             {data.name}
                                                         </span>
+                                                    </TableCell>
+                                                    <TableCell className="w-12 text-center">
+                                                        <div className="flex items-center justify-center gap-2">
+                                                            <DropDownChild
+                                                                list={data}
+                                                            />
+                                                        </div>
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
@@ -221,28 +177,6 @@ export default function SpaceIndex({ spaces, filters }: Props) {
             {/* Modals */}
             {openCreate && (
                 <CreateSpace open={openCreate} setOpen={setOpenCreate} />
-            )}
-            {openEdit && space && (
-                <EditSpace
-                    space={space}
-                    open={openEdit}
-                    setOpen={setOpenEdit}
-                />
-            )}
-            {openDelete && space && (
-                <DeleteSpaces
-                    space={space}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
-            )}
-
-            {openCreateList && space && (
-                <CreateList
-                    open={openCreateList}
-                    setOpen={setOpenCreateList}
-                    space={space}
-                />
             )}
         </AppLayout>
     );
