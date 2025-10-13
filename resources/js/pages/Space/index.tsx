@@ -139,7 +139,7 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                                     key={index}
                                                 >
                                                     <TableCell className="text-gray-300">
-                                                        <span className="ml-6">
+                                                        <span className="ml-6 cursor-pointer hover:font-bold hover:text-white">
                                                             {data.name}
                                                         </span>
                                                     </TableCell>
