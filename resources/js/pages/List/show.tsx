@@ -271,7 +271,7 @@ export default function ListShow() {
                                     +10
                                 </span>
                             </div>
-                            <button className="flex items-center rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-500">
+                            <button className="flex items-center rounded-sm bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-500">
                                 <Share2 className="mr-2 h-4 w-4" />
                                 Invite
                             </button>
