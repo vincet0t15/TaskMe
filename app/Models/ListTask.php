@@ -16,8 +16,8 @@ class ListTask extends Model
         'priority_id'
     ];
 
-    public function priority()
+    public function priorities()
     {
-        return $this->belongsTo(Priority::class);
+        return $this->belongsTo(Priority::class, 'priority_id');
     }
 }

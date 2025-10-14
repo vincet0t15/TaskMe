@@ -20,6 +20,8 @@ import { ListInterface } from '@/types/List';
 import { PaginatedDataResponse } from '@/types/pagination';
 import { SpaceInterface } from '@/types/Space';
 import { Head, router, useForm } from '@inertiajs/react';
+
+import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronDown, ChevronRight, PlusIcon } from 'lucide-react';
 import React, { KeyboardEventHandler, useState } from 'react';
 import { CreateSpace } from './create';
@@ -43,6 +45,7 @@ interface Props {
 }
 
 export default function SpaceIndex({ spaces, filters }: Props) {
+    console.log(spaces);
     const [openCreate, setOpenCreate] = useState(false);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
@@ -144,13 +147,22 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                                 >
                                                     <TableCell className="text-gray-300">
                                                         <span
-                                                            className="ml-6 cursor-pointer hover:font-bold hover:text-white"
+                                                            className="ml-6 flex cursor-pointer items-center gap-2 text-center hover:font-bold hover:text-white"
                                                             onClick={() =>
                                                                 handleClickChildName(
                                                                     data,
                                                                 )
                                                             }
                                                         >
+                                                            <Checkbox
+                                                                disabled
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        data
+                                                                            .priorities
+                                                                            ?.color,
+                                                                }}
+                                                            />
                                                             {data.name}
                                                         </span>
                                                     </TableCell>
