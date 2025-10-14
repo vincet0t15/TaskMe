@@ -11,6 +11,13 @@ class ListTask extends Model
 
     protected $fillable = [
         'name',
-        'space_id'
+        'description',
+        'space_id',
+        'priority_id'
     ];
+
+    public function priority()
+    {
+        return $this->belongsTo(Priority::class);
+    }
 }

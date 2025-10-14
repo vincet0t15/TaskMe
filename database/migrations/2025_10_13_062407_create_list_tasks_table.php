@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('space_id')->constrained('spaces')->cascadeOnDelete();
             $table->string('name');
+            $table->string('description')->nullable();
+            $table->foreignId('priority_id')->constrained('priorities')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

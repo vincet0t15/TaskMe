@@ -1,5 +1,6 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import CustomSelectWithColor from '@/components/ui/custom-select-with-color';
 import {
     Dialog,
     DialogClose,
@@ -13,8 +14,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import list from '@/routes/list';
 import { ListTypes } from '@/types/List';
+import { PrioritiesInterface } from '@/types/priorities';
 import { SpaceInterface } from '@/types/Space';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { ChangeEventHandler, FormEventHandler } from 'react';
 import { toast } from 'sonner';
@@ -24,11 +26,22 @@ interface Props {
     space: SpaceInterface;
 }
 export function CreateList({ open, setOpen, space }: Props) {
+    const { systemPriorities } = usePage().props;
+    console.log(systemPriorities);
     const { data, setData, post, processing, reset, errors } =
         useForm<ListTypes>({
             name: '',
             space_id: space.id,
+            priority_id: 0,
         });
+
+    const prioritiesOption = (systemPriorities as PrioritiesInterface[]).map(
+        (data) => ({
+            label: data.name || '',
+            value: String(data.id),
+            color: data.color || '#000000',
+        }),
+    );
 
     const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -46,6 +59,9 @@ export function CreateList({ open, setOpen, space }: Props) {
         });
     };
 
+    const handleSelectPriority = (data: string) => {
+        setData('priority_id', Number(data));
+    };
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent
@@ -71,6 +87,17 @@ export function CreateList({ open, setOpen, space }: Props) {
                                 placeholder="Enter list name"
                             />
                             <InputError message={errors.name} />
+                        </div>
+                        <div className="grid flex-1 gap-3">
+                            <Label>Priority</Label>
+                            <CustomSelectWithColor
+                                options={prioritiesOption}
+                                widthClass="w-full"
+                                label="Priority"
+                                onChange={handleSelectPriority}
+                                value={String(data.priority_id)}
+                                placeholder="Select types"
+                            />
                         </div>
                     </div>
                     <DialogFooter className="mt-4">

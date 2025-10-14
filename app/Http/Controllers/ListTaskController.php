@@ -15,6 +15,7 @@ class ListTaskController extends Controller
         ListTask::create([
             'name' => $request->name,
             'space_id' => $request->space_id,
+            'priority_id' => $request->priority_id
         ]);
 
         return redirect()->back()->withSuccess('List create successfully');
