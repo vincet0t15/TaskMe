@@ -1,19 +1,20 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import spaces from '@/routes/spaces';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { StatusInterface } from '@/types/statuses';
+import { Head, router, usePage } from '@inertiajs/react';
+
 import {
     ChevronLeft,
     ChevronRight,
-    Filter,
     Heart,
     MessageCircle,
     MoreVertical,
     Plus,
     Share2,
 } from 'lucide-react';
-import { useState } from 'react';
 
 // 🧭 Breadcrumb setup (No change needed)
 const breadcrumbs: BreadcrumbItem[] = [
@@ -28,6 +29,7 @@ const statuses = [
     { name: 'In progress', color: 'text-red-500', count: 2 }, // Updated count
     { name: 'Review / QA', color: 'text-purple-500', count: 5 }, // Updated name and count
     { name: 'Done', color: 'text-green-500', count: 3 },
+    { name: 'Review', color: 'text-green-500', count: 3 },
     // Updated count
 ];
 
@@ -209,36 +211,12 @@ const tasks = [
 ];
 
 export default function ListShow() {
-    // Note: The image design doesn't visually use the hoveredCard state,
-    // but we'll keep it for potential future hover effects.
-    const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+    const { systemStatuses } = usePage<{
+        systemStatuses: StatusInterface[];
+    }>().props;
 
     const handleBack = () => {
         router.visit(spaces.index.url(), { preserveScroll: true });
-    };
-
-    // This function is not used in the image's design, but kept for completeness
-    const getPriorityColor = (priority) => {
-        switch (priority) {
-            case 'high':
-                return 'bg-red-500';
-            case 'medium':
-                return 'bg-amber-500';
-            case 'low':
-                return 'bg-blue-500';
-            default:
-                return 'bg-gray-500';
-        }
-    };
-
-    // This function is not used in the image's design, but kept for completeness
-    const getInitials = (assignee: string) => {
-        if (!assignee) return '';
-        const parts = assignee.split(' ');
-        if (parts.length > 1) {
-            return parts[0][0] + parts[1][0];
-        }
-        return parts[0][0];
     };
 
     return (
@@ -246,97 +224,99 @@ export default function ListShow() {
             <Head title="Mobile App for iOS" />
 
             {/* 🔥 NEW: Project Header and Navigation (Top Bar) 🔥 */}
-            <div className="flex flex-col gap-4 border-b border-slate-800 bg-black p-4">
-                {/* Project Title and Details */}
-                <div className="flex items-start justify-between">
-                    <div className="flex flex-col">
-                        <h1 className="text-xl font-bold text-white">
-                            Mobile App for iOS
-                        </h1>
-                        <p className="text-sm text-slate-400">
-                            Over9k: Gamers app is a social network for gamers.
-                            Designed for streaming various games, communication,
-                            finding friends for joint games.
-                        </p>
-                        <div className="mt-2 flex items-center space-x-4 text-sm text-slate-400">
-                            <span className="font-medium text-white">
-                                28d, 2h, 28min
-                            </span>
-                            <span>|</span>
-                            <span>24.02.2024 - 12.07.24</span>
+            <div className="flex flex-col gap-4 p-4">
+                <div className="rounded-md bg-sidebar p-4">
+                    <button
+                        onClick={handleBack}
+                        className="flex w-fit cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-300 transition hover:bg-sidebar hover:text-white"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                        Back
+                    </button>
+                    {/* Project Title and Details */}
+                    <div className="flex items-start justify-between">
+                        <div className="flex flex-col">
+                            <h1 className="text-xl font-bold text-white">
+                                Mobile App for iOS
+                            </h1>
+                            <p className="text-sm text-slate-400">
+                                Over9k: Gamers app is a social network for
+                                gamers. Designed for streaming various games,
+                                communication, finding friends for joint games.
+                            </p>
+                            <div className="mt-2 flex items-center space-x-4 text-sm text-slate-400">
+                                <span className="font-medium text-white">
+                                    28d, 2h, 28min
+                                </span>
+                                <span>|</span>
+                                <span>24.02.2024 - 12.07.24</span>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Team Avatars and Invite Button */}
-                    <div className="flex items-center space-x-3">
-                        {/* Avatar Group - simulating 4 avatars shown in the image */}
-                        <div className="flex items-center -space-x-1">
-                            {Array(3)
-                                .fill(null)
-                                .map((_, i) => (
-                                    <img
-                                        key={i}
-                                        src={`https://i.pravatar.cc/32?img=${30 + i}`}
-                                        alt={`Avatar ${i + 1}`}
-                                        className="h-7 w-7 rounded-full border-2 border-slate-900"
-                                    />
-                                ))}
-                            <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-800 text-xs text-white">
-                                +10
-                            </span>
-                        </div>
-                        <button className="flex items-center rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-500">
-                            <Share2 className="mr-2 h-4 w-4" />
-                            Invite
-                        </button>
-                    </div>
-                </div>
-
-                {/* View Selector, Filter, and Date Navigation */}
-                <div className="mt-3 flex items-center justify-between">
-                    {/* View and Filter */}
-                    <div className="flex items-center space-x-6">
-                        <div className="flex rounded-lg bg-slate-800 p-1">
-                            <button className="rounded-md bg-[#1d1e1f] px-3 py-1 text-sm font-semibold text-white transition hover:text-white">
-                                Kanban
-                            </button>
-                            <button className="rounded-md px-3 py-1 text-sm text-slate-400 transition hover:text-white">
-                                List view
-                            </button>
-                            <button className="rounded-md px-3 py-1 text-sm text-slate-400 transition hover:text-white">
-                                Table view
+                        {/* Team Avatars and Invite Button */}
+                        <div className="flex items-center space-x-3">
+                            {/* Avatar Group - simulating 4 avatars shown in the image */}
+                            <div className="flex items-center -space-x-1">
+                                {Array(3)
+                                    .fill(null)
+                                    .map((_, i) => (
+                                        <img
+                                            key={i}
+                                            src={`https://i.pravatar.cc/32?img=${30 + i}`}
+                                            alt={`Avatar ${i + 1}`}
+                                            className="h-7 w-7 rounded-full border-2 border-slate-900"
+                                        />
+                                    ))}
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-800 text-xs text-white">
+                                    +10
+                                </span>
+                            </div>
+                            <button className="flex items-center rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-500">
+                                <Share2 className="mr-2 h-4 w-4" />
+                                Invite
                             </button>
                         </div>
-                        <button className="flex items-center space-x-1 rounded-lg bg-slate-800 px-3 py-1 text-sm font-medium text-slate-400 transition hover:bg-slate-700">
-                            <Filter className="h-4 w-4" />
-                            <span>Filter</span>
-                            <span className="ml-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white">
-                                3
-                            </span>
-                        </button>
                     </div>
+                    {/* View Selector, Filter, and Date Navigation */}
+                    <div className="mt-3 flex items-center justify-between">
+                        {/* View and Filter */}
+                        <div className="flex w-full max-w-sm flex-col gap-6">
+                            <Tabs defaultValue="account">
+                                <TabsList>
+                                    <TabsTrigger value="account">
+                                        Account
+                                    </TabsTrigger>
+                                    <TabsTrigger value="password">
+                                        Password
+                                    </TabsTrigger>
+                                </TabsList>
+                                <TabsContent value="account">1</TabsContent>
+                                <TabsContent value="password">2</TabsContent>
+                            </Tabs>
+                        </div>
 
-                    {/* Date Navigation */}
-                    <div className="flex items-center space-x-2 text-slate-400">
-                        <button className="rounded-full p-1 transition hover:bg-slate-800">
-                            <ChevronLeft className="h-4 w-4" />
-                        </button>
-                        <span className="text-sm font-medium text-white">
-                            18.03 - 24.03
-                        </span>
-                        <span className="text-xs">March, week 4</span>
-                        <button className="rounded-full p-1 transition hover:bg-slate-800">
-                            <ChevronRight className="h-4 w-4" />
-                        </button>
+                        {/* Date Navigation */}
+                        <div className="flex items-center space-x-2 text-slate-400">
+                            <button className="rounded-full p-1 transition hover:bg-slate-800">
+                                <ChevronLeft className="h-4 w-4" />
+                            </button>
+                            <span className="text-sm font-medium text-white">
+                                18.03 - 24.03
+                            </span>
+                            <span className="text-xs">March, week 4</span>
+                            <button className="rounded-full p-1 transition hover:bg-slate-800">
+                                <ChevronRight className="h-4 w-4" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
             {/* ⬆️ END: Project Header and Navigation ⬆️ */}
 
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto bg-black p-4">
+            <div className="flex h-full w-full flex-1 flex-col gap-6 overflow-x-auto">
                 <div className="w-full flex-1 p-0">
-                    <div className="flex h-full space-x-4">
-                        {statuses.map((status) => {
+                    <div className="flex h-full">
+                        {systemStatuses.map((status) => {
                             const filtered = tasks.filter(
                                 (t) =>
                                     t.status.toLowerCase() ===
@@ -345,9 +325,14 @@ export default function ListShow() {
                             return (
                                 <div
                                     key={status.name}
-                                    className="flex w-72 flex-shrink-0 flex-col rounded-xl bg-slate-900 shadow-xl" // Dark column background
+                                    className="flex w-72 flex-shrink-0 flex-col rounded-xl p-4 shadow-xl"
                                 >
-                                    <div className="flex items-center justify-between border-b border-slate-800 p-4">
+                                    <div
+                                        className="flex items-center justify-between rounded-sm border-b border-slate-800 p-3"
+                                        style={{
+                                            backgroundColor: status.color,
+                                        }}
+                                    >
                                         <div className="flex items-center gap-2">
                                             <h3 className="text-sm font-bold tracking-wide text-white">
                                                 {status.name}
@@ -355,7 +340,7 @@ export default function ListShow() {
 
                                             {/* Corrected logic to show filtered count, although I've manually updated status.count to match image */}
                                             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-slate-400">
-                                                {status.count}
+                                                2
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-1">
@@ -370,19 +355,13 @@ export default function ListShow() {
                                     </div>
 
                                     {/* Task Cards Container */}
-                                    <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto p-3">
+                                    <div className="custom-scrollbar mt-4 flex-1 space-y-3 overflow-y-auto">
                                         {filtered.map((task) => (
                                             // ➡️ Task Card
                                             <div
                                                 key={task.id}
                                                 // Card styling: dark background, border, shadow
                                                 className={`group cursor-pointer rounded-xl border border-slate-800 bg-[#1d1e1f] p-4 shadow-lg transition-all duration-200 hover:border-slate-700`}
-                                                onMouseEnter={() =>
-                                                    setHoveredCard(task.id)
-                                                }
-                                                onMouseLeave={() =>
-                                                    setHoveredCard(null)
-                                                }
                                             >
                                                 {/* Category/Tag Label */}
                                                 <span
@@ -433,11 +412,6 @@ export default function ListShow() {
                                             </div>
                                         ))}
                                     </div>
-
-                                    {/* Add Card Button at the bottom (Simplified version) */}
-                                    <button className="m-3 mt-0 rounded-lg py-2 text-sm text-slate-500 transition hover:text-slate-400">
-                                        + Add Task
-                                    </button>
                                 </div>
                             );
                         })}

@@ -14,7 +14,6 @@ class StatusSeeder extends Seeder
     public function run(): void
     {
         $statuses = [
-            ['name' => 'Backlog',     'color' => '#6b7280'], // Gray
             ['name' => 'To Do',       'color' => '#3b82f6'], // Blue
             ['name' => 'In Progress', 'color' => '#f59e0b'], // Amber
             ['name' => 'Blocked',     'color' => '#ef4444'], // Red

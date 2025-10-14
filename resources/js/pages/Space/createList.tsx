@@ -27,7 +27,7 @@ interface Props {
 }
 export function CreateList({ open, setOpen, space }: Props) {
     const { systemPriorities } = usePage().props;
-    console.log(systemPriorities);
+
     const { data, setData, post, processing, reset, errors } =
         useForm<ListTypes>({
             name: '',

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Controllers\PriorityController;
+use App\Http\Controllers\StatusController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -28,9 +29,15 @@ class AppServiceProvider extends ServiceProvider
                     return null;
                 }
 
-                // Safely resolve the controller and call its method
                 return app(PriorityController::class)->getAllPriorities();
             },
+            'systemStatuses' => function () {
+                if (!Auth::check()) {
+                    return null;
+                }
+
+                return app(StatusController::class)->getAllStatuses();
+            }
         ]);
     }
 }
