@@ -29,6 +29,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('lists', [ListTaskController::class, 'store'])->name('list.store');
     Route::put('lists/{list}', [ListTaskController::class, 'update'])->name('list.update');
     Route::delete('lists/{list}', [ListTaskController::class, 'destroy'])->name('list.destroy');
+
+
     Route::get('lists/{list}', [ListTaskController::class, 'show'])->name('lists.show');
 });
 

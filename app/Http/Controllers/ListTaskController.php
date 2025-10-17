@@ -37,6 +37,8 @@ class ListTaskController extends Controller
 
     public function show(ListTask $list)
     {
-        return Inertia::render('List/show');
+        return Inertia::render('List/show', [
+            'list' => $list,
+        ]);
     }
 }
