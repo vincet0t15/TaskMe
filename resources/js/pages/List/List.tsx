@@ -1,94 +1,109 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import { type BreadcrumbItem } from '@/types';
 import { ListInterface } from '@/types/List';
-
-const invoices = [
+import { PaginatedDataResponse } from '@/types/pagination';
+import { TaskInterface } from '@/types/task';
+import { AlertTriangleIcon, Clock } from 'lucide-react';
+import ListLayout from './ListLayout';
+const breadcrumbs: BreadcrumbItem[] = [
     {
-        invoice: 'INV001',
-        paymentStatus: 'Paid',
-        totalAmount: '$250.00',
-        paymentMethod: 'Credit Card',
-    },
-    {
-        invoice: 'INV002',
-        paymentStatus: 'Pending',
-        totalAmount: '$150.00',
-        paymentMethod: 'PayPal',
-    },
-    {
-        invoice: 'INV003',
-        paymentStatus: 'Unpaid',
-        totalAmount: '$350.00',
-        paymentMethod: 'Bank Transfer',
-    },
-    {
-        invoice: 'INV004',
-        paymentStatus: 'Paid',
-        totalAmount: '$450.00',
-        paymentMethod: 'Credit Card',
-    },
-    {
-        invoice: 'INV005',
-        paymentStatus: 'Paid',
-        totalAmount: '$550.00',
-        paymentMethod: 'PayPal',
-    },
-    {
-        invoice: 'INV006',
-        paymentStatus: 'Pending',
-        totalAmount: '$200.00',
-        paymentMethod: 'Bank Transfer',
-    },
-    {
-        invoice: 'INV007',
-        paymentStatus: 'Unpaid',
-        totalAmount: '$300.00',
-        paymentMethod: 'Credit Card',
+        title: 'Dashboard',
+        href: dashboard().url,
     },
 ];
+
 interface Props {
     list: ListInterface;
+    tasks: PaginatedDataResponse<TaskInterface>;
 }
-export function TableList() {
+
+export default function TableList({ list, tasks }: Props) {
+    console.log(tasks);
     return (
-        <Table className="w-full">
-            <TableCaption>A list of your recent invoices.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {invoices.map((invoice) => (
-                    <TableRow key={invoice.invoice}>
-                        <TableCell className="font-medium">
-                            {invoice.invoice}
-                        </TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell className="text-right">
-                            {invoice.totalAmount}
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-            <TableFooter>
-                <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">$2,500.00</TableCell>
-                </TableRow>
-            </TableFooter>
-        </Table>
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <ListLayout list={list}>
+                <div className="overflow-hidden rounded-sm">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="">Name</TableHead>
+                                <TableHead>Due date</TableHead>
+                                <TableHead>Priority</TableHead>
+                                <TableHead>Status</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {tasks.data.map((data, index) => (
+                                <TableRow key={index}>
+                                    <TableCell className="font-medium">
+                                        {data.name}
+                                    </TableCell>
+
+                                    <TableCell className="font-medium">
+                                        {data.due_date ? (
+                                            (() => {
+                                                const dueDate = new Date(
+                                                    data.due_date,
+                                                );
+                                                const today = new Date();
+                                                const isOverdue =
+                                                    dueDate < today;
+
+                                                return (
+                                                    <div
+                                                        className={`flex items-center gap-1 text-xs ${
+                                                            isOverdue
+                                                                ? 'text-red-400'
+                                                                : 'text-gray-400'
+                                                        }`}
+                                                        title={
+                                                            isOverdue
+                                                                ? 'Overdue'
+                                                                : 'Due Date'
+                                                        }
+                                                    >
+                                                        {isOverdue ? (
+                                                            <AlertTriangleIcon className="h-3 w-3" />
+                                                        ) : (
+                                                            <Clock className="h-3 w-3" />
+                                                        )}
+                                                        {dueDate.toLocaleDateString(
+                                                            'en-US',
+                                                            {
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                            },
+                                                        )}
+                                                    </div>
+                                                );
+                                            })()
+                                        ) : (
+                                            <span className="text-gray-500">
+                                                —
+                                            </span>
+                                        )}
+                                    </TableCell>
+                                    <TableCell className="font-medium">
+                                        {data.priorities.name}
+                                    </TableCell>
+                                    <TableCell className="font-medium">
+                                        {data.status.name}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            </ListLayout>
+        </AppLayout>
     );
 }

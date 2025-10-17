@@ -20,4 +20,9 @@ class ListTask extends Model
     {
         return $this->belongsTo(Priority::class, 'priority_id');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'list_task_id', 'id');
+    }
 }

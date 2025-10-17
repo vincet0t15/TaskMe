@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskListRequest\TaskListStoreRequest;
 use App\Http\Requests\TaskListRequest\TaskListUpdateRequest;
 use App\Models\ListTask;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -37,8 +38,12 @@ class ListTaskController extends Controller
 
     public function show(ListTask $list)
     {
-        return Inertia::render('List/show', [
+        $tasks = Task::with('priorities', 'status')
+            ->where('list_task_id', $list->id)->paginate(10);
+
+        return Inertia::render('List/List', [
             'list' => $list,
+            'tasks' => $tasks,
         ]);
     }
 }

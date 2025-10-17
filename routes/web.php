@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ListTaskController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SpaceController;
+use App\Http\Controllers\TaskController;
 use App\Models\ListTask;
 use App\Models\Space;
 use Illuminate\Support\Facades\Route;
@@ -29,9 +31,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('lists', [ListTaskController::class, 'store'])->name('list.store');
     Route::put('lists/{list}', [ListTaskController::class, 'update'])->name('list.update');
     Route::delete('lists/{list}', [ListTaskController::class, 'destroy'])->name('list.destroy');
-
-
     Route::get('lists/{list}', [ListTaskController::class, 'show'])->name('lists.show');
+
+    // TASK
+    Route::post('tasks', [TaskController::class, 'store'])->name('task.store');
+
+    // Calendar
+    Route::get('calendar/{list}', [CalendarController::class, 'show'])->name('calendar.show');
 });
 
 require __DIR__ . '/settings.php';

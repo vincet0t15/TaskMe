@@ -1,4 +1,5 @@
 import { PrioritiesInterface } from './priorities';
+import { TaskInterface } from './task';
 
 export interface ListInterface {
     id: number;
@@ -7,8 +8,7 @@ export interface ListInterface {
     space_id: number;
     priority_id?: number;
     priorities?: PrioritiesInterface;
-    created_at: string;
-    updated_at: string;
+    tasks: TaskInterface[];
 }
 
 export type ListTypes = {

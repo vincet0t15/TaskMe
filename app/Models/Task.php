@@ -20,7 +20,7 @@ class Task extends Model
 
     public function priorities()
     {
-        return $this->belongsTo(Priority::class);
+        return $this->belongsTo(Priority::class, 'priority_id');
     }
 
     public function list()

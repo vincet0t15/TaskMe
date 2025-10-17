@@ -19,6 +19,7 @@ interface ListLayoutProps extends PropsWithChildren {
 }
 
 export default function ListShow({ list }: ListLayoutProps) {
+    console.log(list);
     const [openCreateTask, setOpenCreateTask] = useState(false);
     const handleBack = () => {
         router.visit(spaces.index.url(), { preserveScroll: true });
@@ -123,7 +124,7 @@ export default function ListShow({ list }: ListLayoutProps) {
 
                             {/* Tab Contents */}
                             <TabsContent value="list" className="mt-4">
-                                <TableList />
+                                <TableList list={list.tasks} />
                             </TabsContent>
                             <TabsContent value="kanban" className="mt-4">
                                 <Kanban />
