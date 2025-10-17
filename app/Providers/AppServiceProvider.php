@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Controllers\PriorityController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -37,6 +38,13 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 return app(StatusController::class)->getAllStatuses();
+            },
+            'systemUsers' => function () {
+                if (!Auth::check()) {
+                    return null;
+                }
+
+                return app(UserController::class)->getAllUsers();
             }
         ]);
     }

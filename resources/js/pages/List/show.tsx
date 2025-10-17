@@ -6,10 +6,12 @@ import spaces from '@/routes/spaces';
 import { BreadcrumbItem } from '@/types';
 import { ListInterface } from '@/types/List';
 import { Head, router } from '@inertiajs/react';
-import { ChevronLeft, Share2 } from 'lucide-react';
-import { PropsWithChildren } from 'react';
+import { ChevronLeft, PlusIcon, Share2 } from 'lucide-react';
+import { PropsWithChildren, useState } from 'react';
 import Calendar from './Calendar';
-import Kanban from './kanban';
+
+import { CreateTaskDialog } from '../Task/create';
+import Kanban from './Kanban';
 import { TableList } from './List';
 
 interface ListLayoutProps extends PropsWithChildren {
@@ -17,6 +19,7 @@ interface ListLayoutProps extends PropsWithChildren {
 }
 
 export default function ListShow({ list }: ListLayoutProps) {
+    const [openCreateTask, setOpenCreateTask] = useState(false);
     const handleBack = () => {
         router.visit(spaces.index.url(), { preserveScroll: true });
     };
@@ -110,23 +113,10 @@ export default function ListShow({ list }: ListLayoutProps) {
                                 {/* Create Task Button */}
                                 <Button
                                     variant={'ghost'}
-                                    onClick={() => console.log('Create Task')}
-                                    className="ml-4 flex items-center gap-2 rounded-md border border-slate-600 px-4 py-1.5 text-sm font-medium text-slate-300 transition hover:border-blue-500 hover:text-white"
+                                    onClick={() => setOpenCreateTask(true)}
+                                    className="ml-4 flex items-center gap-2 rounded-md border px-4 py-1.5 text-sm font-medium text-slate-300 transition"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth={1.5}
-                                        stroke="currentColor"
-                                        className="h-4 w-4"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M12 4.5v15m7.5-7.5h-15"
-                                        />
-                                    </svg>
+                                    <PlusIcon />
                                     Create Task
                                 </Button>
                             </div>
@@ -144,6 +134,12 @@ export default function ListShow({ list }: ListLayoutProps) {
                         </Tabs>
                     </div>
                 </div>
+                {openCreateTask && (
+                    <CreateTaskDialog
+                        open={openCreateTask}
+                        setOpen={setOpenCreateTask}
+                    />
+                )}
             </div>
         </AppLayout>
     );
