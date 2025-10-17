@@ -1,3 +1,5 @@
+import Pagination from '@/components/paginationData';
+import { Badge } from '@/components/ui/badge';
 import {
     Table,
     TableBody,
@@ -33,7 +35,7 @@ export default function TableList({ list, tasks }: Props) {
             <ListLayout list={list}>
                 <div className="overflow-hidden rounded-sm">
                     <Table>
-                        <TableHeader>
+                        <TableHeader className="sticky top-0 z-10 bg-muted">
                             <TableRow>
                                 <TableHead className="">Name</TableHead>
                                 <TableHead>Due date</TableHead>
@@ -93,15 +95,32 @@ export default function TableList({ list, tasks }: Props) {
                                         )}
                                     </TableCell>
                                     <TableCell className="font-medium">
-                                        {data.priorities.name}
+                                        <Badge
+                                            style={{
+                                                backgroundColor:
+                                                    data.priorities.color,
+                                            }}
+                                        >
+                                            {data.priorities.name}
+                                        </Badge>
                                     </TableCell>
                                     <TableCell className="font-medium">
-                                        {data.status.name}
+                                        <Badge
+                                            style={{
+                                                backgroundColor:
+                                                    data.status.color,
+                                            }}
+                                        >
+                                            {data.status.name}
+                                        </Badge>
                                     </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
+                    <div>
+                        <Pagination data={tasks} />
+                    </div>
                 </div>
             </ListLayout>
         </AppLayout>

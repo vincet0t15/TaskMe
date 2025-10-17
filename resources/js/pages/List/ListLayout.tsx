@@ -3,8 +3,9 @@ import calendar from '@/routes/calendar';
 import lists from '@/routes/lists';
 import { ListInterface } from '@/types/List';
 import { Link } from '@inertiajs/react';
-import { ChevronLeft, Share2 } from 'lucide-react';
-import { PropsWithChildren } from 'react';
+import { ChevronLeft, PlusIcon, Share2 } from 'lucide-react';
+import { PropsWithChildren, useState } from 'react';
+import { CreateTaskDialog } from '../Task/create';
 interface Props {
     list: ListInterface;
 }
@@ -12,6 +13,7 @@ export default function ListLayout({
     list,
     children,
 }: PropsWithChildren<Props>) {
+    const [openCreateTask, setOpenCreateTask] = useState(false);
     return (
         <div className="p-4">
             <div className="rounded-md bg-sidebar p-4">
@@ -64,18 +66,36 @@ export default function ListLayout({
                     </div>
                 </div>
             </div>
-            <div className="mt-2 flex w-full gap-2 rounded-md bg-sidebar p-1">
-                <Button variant={'ghost'}>
-                    <Link href={lists.show.url(list.id)}>List</Link>
-                </Button>
-                <Button variant={'ghost'}>
-                    <Link href={calendar.show.url(list.id)}>Kanban</Link>
-                </Button>
-                <Button variant={'ghost'}>
-                    <Link href={calendar.show.url(list.id)}>Calendar</Link>
-                </Button>
+            <div className="mt-2 flex w-full justify-between gap-2 rounded-md bg-sidebar p-1">
+                <div>
+                    <Button variant={'ghost'}>
+                        <Link href={lists.show.url(list.id)}>List</Link>
+                    </Button>
+                    <Button variant={'ghost'}>
+                        <Link href={calendar.show.url(list.id)}>Kanban</Link>
+                    </Button>
+                    <Button variant={'ghost'}>
+                        <Link href={calendar.show.url(list.id)}>Calendar</Link>
+                    </Button>
+                </div>
+                <div>
+                    <Button
+                        variant={'ghost'}
+                        className="border"
+                        onClick={() => setOpenCreateTask(true)}
+                    >
+                        <PlusIcon />
+                        Create task
+                    </Button>
+                </div>
             </div>
             <div className="mt-4 rounded-md bg-sidebar p-2">{children}</div>
+            {openCreateTask && (
+                <CreateTaskDialog
+                    open={openCreateTask}
+                    setOpen={setOpenCreateTask}
+                />
+            )}
         </div>
     );
 }
