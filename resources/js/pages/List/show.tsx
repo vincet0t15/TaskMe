@@ -42,25 +42,21 @@ export default function ListShow({ list }: ListLayoutProps) {
                     </button>
 
                     {/* Header Section */}
-                    <div className="flex items-start justify-between">
-                        <div className="flex flex-col">
-                            <h1 className="text-xl font-bold text-white">
-                                {list?.name || 'Untitled List'}
-                            </h1>
-                            <p className="text-sm text-slate-400">
-                                {list?.description ||
-                                    'No description available.'}
-                            </p>
-                            <div className="mt-2 flex items-center space-x-4 text-sm text-slate-400">
-                                <span className="font-medium text-white">
-                                    28d, 2h, 28min
-                                </span>
-                                <span>|</span>
-                                <span>24.02.2024 - 12.07.24</span>
+                    <div className="flex w-full items-start justify-between">
+                        {/* Left: Title, description, and details */}
+                        <div className="flex flex-col space-y-2">
+                            <div>
+                                <h1 className="text-xl font-bold text-white">
+                                    {list?.name || 'Untitled List'}
+                                </h1>
+                                <p className="text-sm text-slate-400">
+                                    {list?.description ||
+                                        'No description available.'}
+                                </p>
                             </div>
                         </div>
 
-                        {/* Team and Invite */}
+                        {/* Right: Avatars and Invite button */}
                         <div className="flex items-center space-x-3">
                             <div className="flex items-center -space-x-1">
                                 {Array(3)
@@ -77,6 +73,7 @@ export default function ListShow({ list }: ListLayoutProps) {
                                     +10
                                 </span>
                             </div>
+
                             <button className="flex items-center rounded-sm bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-500">
                                 <Share2 className="mr-2 h-4 w-4" />
                                 Invite
@@ -85,29 +82,36 @@ export default function ListShow({ list }: ListLayoutProps) {
                     </div>
 
                     {/* Tabs Section */}
-                    <div className="mt-3 flex items-center justify-between">
-                        <Tabs defaultValue="list" className="w-full">
-                            <TabsList className="flex gap-2 bg-transparent">
-                                <TabsTrigger value="list">List</TabsTrigger>
-                                <TabsTrigger value="kanban">Kanban</TabsTrigger>
-                                <TabsTrigger value="calendar">
-                                    Calendar
+                </div>
+                <div className="mt-3 flex items-center justify-between rounded-md bg-sidebar p-4">
+                    <Tabs defaultValue="list" className="w-full">
+                        <TabsList className="flex gap-6 bg-transparent px-1">
+                            {[
+                                { label: 'List', value: 'list' },
+                                { label: 'Kanban', value: 'kanban' },
+                                { label: 'Calendar', value: 'calendar' },
+                            ].map((tab) => (
+                                <TabsTrigger
+                                    key={tab.value}
+                                    value={tab.value}
+                                    className="relative px-2 py-2 text-sm font-medium text-slate-300 transition-all duration-300 ease-in-out hover:text-white data-[state=active]:text-white"
+                                >
+                                    {tab.label}
+                                    <span className="absolute -bottom-[2px] left-0 h-[2px] w-0 bg-blue-500 transition-all duration-300 ease-in-out data-[state=active]:w-full" />
                                 </TabsTrigger>
-                            </TabsList>
+                            ))}
+                        </TabsList>
 
-                            <TabsContent value="list" className="mt-4">
-                                <TableList />
-                            </TabsContent>
-                            <TabsContent value="kanban" className="mt-4">
-                                <Kanban />
-                            </TabsContent>
-                            <TabsContent value="calendar" className="mt-4">
-                                <Calendar />
-                            </TabsContent>
-                        </Tabs>
-
-                        {/* Date Navigation */}
-                    </div>
+                        <TabsContent value="list" className="mt-4">
+                            <TableList />
+                        </TabsContent>
+                        <TabsContent value="kanban" className="mt-4">
+                            <Kanban />
+                        </TabsContent>
+                        <TabsContent value="calendar" className="mt-4">
+                            <Calendar />
+                        </TabsContent>
+                    </Tabs>
                 </div>
             </div>
         </AppLayout>
