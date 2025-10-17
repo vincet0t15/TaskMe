@@ -1,6 +1,3 @@
-import { dashboard } from '@/routes';
-import spaces from '@/routes/spaces';
-import { type BreadcrumbItem } from '@/types';
 import { ListInterface } from '@/types/List';
 import { StatusInterface } from '@/types/statuses';
 import { usePage } from '@inertiajs/react';
@@ -184,11 +181,7 @@ export default function Kanban() {
         systemStatuses: StatusInterface[];
     }>().props;
     const { list } = usePage<{ list: ListInterface }>().props;
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: dashboard().url },
-        { title: 'Projects', href: spaces.index.url() },
-        { title: list.name, href: '' },
-    ];
+
     return (
         <div className="flex h-full w-full flex-1 flex-col gap-6 overflow-x-auto">
             <div className="w-full flex-1 p-0">
