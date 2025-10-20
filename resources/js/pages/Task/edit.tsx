@@ -107,11 +107,11 @@ export function EditTaskDialog({ open, setOpen, taskEdit }: Props) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="">
                 <DialogHeader>
-                    <DialogTitle>Create Task</DialogTitle>
+                    <DialogTitle>Edit Task</DialogTitle>
                     <DialogDescription>
-                        Fill in the details below to add a new task to this
-                        list. You can set its title, priority, status, and
-                        assign it to team members.
+                        Fill in the details below to edit a task to this list.
+                        You can set its title, priority, status, and assign it
+                        to team members.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={submit}>

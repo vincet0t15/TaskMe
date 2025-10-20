@@ -9,6 +9,8 @@ import { ListInterface } from '@/types/List';
 import { StatusInterface } from '@/types/statuses';
 import { TaskInterface } from '@/types/task';
 import {
+    AlertTriangle,
+    Clock,
     MessageCircle,
     MoreVerticalIcon,
     Plus,
@@ -41,6 +43,26 @@ export default function Kanban({ list, tasks }: Props) {
             href: dashboard().url,
         },
     ];
+    const formatDate = (d?: string | null) => {
+        if (!d) return '—';
+        try {
+            return new Date(d).toLocaleDateString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+            });
+        } catch {
+            return '—';
+        }
+    };
+
+    const isOverdue = (d?: string | null) => {
+        if (!d) return false;
+        const due = new Date(d).getTime();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return due < today.getTime();
+    };
 
     const getTransparentColor = (hex: string, opacity = 0.15) => {
         if (!hex.startsWith('#')) return hex;
@@ -92,7 +114,7 @@ export default function Kanban({ list, tasks }: Props) {
                                         }}
                                     >
                                         <div className="flex items-center gap-2">
-                                            <h3 className="text-sm font-semibold">
+                                            <h3 className="text-sm font-semibold uppercase">
                                                 {status.name}
                                             </h3>
                                             <Badge className="rounded-full">
@@ -109,7 +131,7 @@ export default function Kanban({ list, tasks }: Props) {
                                                 <Plus className="h-4 w-4" />
                                             </button>
                                             <button className="p-1 text-slate-300 transition-colors hover:text-white">
-                                                <MoreVerticalIcon />
+                                                <MoreVerticalIcon className="h-4 w-4" />
                                             </button>
                                         </div>
                                     </div>
@@ -166,7 +188,7 @@ export default function Kanban({ list, tasks }: Props) {
                                                 {/* Footer */}
                                                 <div className="flex items-center justify-between border-t border-slate-500/40 pt-2 text-xs text-slate-400">
                                                     {/* Comments and Assigned Users */}
-                                                    <div className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-1">
                                                         {/* Comments Count */}
                                                         <div className="flex items-center gap-1">
                                                             <MessageCircle className="h-3.5 w-3.5" />
@@ -174,7 +196,7 @@ export default function Kanban({ list, tasks }: Props) {
                                                         </div>
 
                                                         {/* Users (Avatars) */}
-                                                        <div className="ml-3 flex items-center">
+                                                        <div className="ml-1 flex items-center">
                                                             <div className="flex flex-row flex-wrap items-center gap-12">
                                                                 <div className="flex -space-x-2">
                                                                     {(task.users
@@ -188,8 +210,8 @@ export default function Kanban({ list, tasks }: Props) {
                                                                             )
                                                                                 .slice(
                                                                                     0,
-                                                                                    5,
-                                                                                )
+                                                                                    2,
+                                                                                ) // ✅ show only first 3 users
                                                                                 .map(
                                                                                     (
                                                                                         user,
@@ -201,15 +223,7 @@ export default function Kanban({ list, tasks }: Props) {
                                                                                             }
                                                                                             className="h-5 w-5"
                                                                                         >
-                                                                                            <AvatarFallback
-                                                                                                className="rounded-full border border-slate-800 text-xs font-semibold text-white"
-                                                                                                style={{
-                                                                                                    backgroundColor:
-                                                                                                        getRandomDarkColor(
-                                                                                                            user.name,
-                                                                                                        ),
-                                                                                                }}
-                                                                                            >
+                                                                                            <AvatarFallback className="rounded-full border border-slate-800 bg-slate-700 text-xs font-semibold text-white">
                                                                                                 {getInitials(
                                                                                                     user.name,
                                                                                                 )}
@@ -222,14 +236,14 @@ export default function Kanban({ list, tasks }: Props) {
                                                                                 .users
                                                                                 ?.length ??
                                                                                 0) >
-                                                                                5 && (
+                                                                                2 && (
                                                                                 <div className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-700 text-[10px] font-semibold text-white">
                                                                                     +
                                                                                     {(task
                                                                                         .users
                                                                                         ?.length ??
                                                                                         0) -
-                                                                                        5}
+                                                                                        2}
                                                                                 </div>
                                                                             )}
                                                                         </>
@@ -241,7 +255,7 @@ export default function Kanban({ list, tasks }: Props) {
                                                         </div>
 
                                                         <div
-                                                            className="ml-3 flex items-center gap-1"
+                                                            className="ml-1 flex items-center gap-1"
                                                             onClick={() =>
                                                                 console.log(
                                                                     'Test',
@@ -252,6 +266,56 @@ export default function Kanban({ list, tasks }: Props) {
                                                             <span>
                                                                 2 subtask
                                                             </span>
+                                                        </div>
+                                                        <div className="ml-3 flex items-center gap-1">
+                                                            {(() => {
+                                                                const dueDate =
+                                                                    task?.due_date;
+                                                                const isOverdue =
+                                                                    dueDate &&
+                                                                    new Date(
+                                                                        dueDate,
+                                                                    ) <
+                                                                        new Date();
+
+                                                                if (dueDate) {
+                                                                    return (
+                                                                        <div
+                                                                            className={`flex items-center gap-1 text-xs ${
+                                                                                isOverdue
+                                                                                    ? 'text-red-400'
+                                                                                    : 'text-gray-400'
+                                                                            }`}
+                                                                            title={
+                                                                                isOverdue
+                                                                                    ? 'Overdue'
+                                                                                    : 'Due Date'
+                                                                            }
+                                                                        >
+                                                                            {isOverdue ? (
+                                                                                <AlertTriangle className="h-3 w-3" />
+                                                                            ) : (
+                                                                                <Clock className="h-3 w-3" />
+                                                                            )}
+                                                                            {new Date(
+                                                                                dueDate,
+                                                                            ).toLocaleDateString(
+                                                                                'en-US',
+                                                                                {
+                                                                                    month: 'short',
+                                                                                    day: 'numeric',
+                                                                                },
+                                                                            )}
+                                                                        </div>
+                                                                    );
+                                                                }
+
+                                                                return (
+                                                                    <span className="text-gray-500">
+                                                                        —
+                                                                    </span>
+                                                                );
+                                                            })()}
                                                         </div>
                                                     </div>
                                                 </div>
