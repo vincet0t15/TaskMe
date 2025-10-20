@@ -19,6 +19,6 @@ export interface TaskInterface {
     status_id: number;
     list_task_id: number;
     due_date: string;
-    priorities: PrioritiesInterface;
+    priority: PrioritiesInterface;
     status: StatusInterface;
 }

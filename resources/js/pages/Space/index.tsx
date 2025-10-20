@@ -114,7 +114,6 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                             {spaces.data.length > 0 ? (
                                 spaces.data.map((item, index) => (
                                     <React.Fragment key={index}>
-                                        {/* Main Row */}
                                         <TableRow
                                             className="cursor-pointer transition hover:bg-accent/20"
                                             onClick={() =>
@@ -138,7 +137,6 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                                             </TableCell>
                                         </TableRow>
 
-                                        {/* Collapsible Row */}
                                         {expandedRow === item.id &&
                                             item.list.map((data, index) => (
                                                 <TableRow

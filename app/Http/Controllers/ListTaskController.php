@@ -43,7 +43,7 @@ class ListTaskController extends Controller
         //     ->where('list_task_id', $list->id)->paginate(10);
 
         $tasks = Status::with(['tasks' => function ($query) use ($list) {
-            $query->with('priorities', 'status')
+            $query->with('priority', 'status')
                 ->where('list_task_id', $list->id);
         }])->paginate(10);
 

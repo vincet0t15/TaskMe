@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import calendar from '@/routes/calendar';
+import kanban from '@/routes/kanban';
 import lists from '@/routes/lists';
 import { ListInterface } from '@/types/List';
 import { Link } from '@inertiajs/react';
@@ -72,7 +73,7 @@ export default function ListLayout({
                         <Link href={lists.show.url(list.id)}>List</Link>
                     </Button>
                     <Button variant={'ghost'}>
-                        <Link href={calendar.show.url(list.id)}>Kanban</Link>
+                        <Link href={kanban.show.url(list.id)}>Kanban</Link>
                     </Button>
                     <Button variant={'ghost'}>
                         <Link href={calendar.show.url(list.id)}>Calendar</Link>
@@ -89,7 +90,7 @@ export default function ListLayout({
                     </Button>
                 </div>
             </div>
-            <div className="mt-4 rounded-md bg-sidebar p-2">{children}</div>
+            <div className="mt-4 rounded-md bg-transparent p-2">{children}</div>
             {openCreateTask && (
                 <CreateTaskDialog
                     open={openCreateTask}

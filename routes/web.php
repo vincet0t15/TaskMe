@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\ListTaskController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SpaceController;
@@ -38,6 +39,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Calendar
     Route::get('calendar/{list}', [CalendarController::class, 'show'])->name('calendar.show');
+
+    // Kanban
+    Route::get('kanban/{list}', [KanbanController::class, 'show'])->name('kanban.show');
 });
 
 require __DIR__ . '/settings.php';

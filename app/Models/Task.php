@@ -18,7 +18,7 @@ class Task extends Model
         'due_date'
     ];
 
-    public function priorities()
+    public function priority()
     {
         return $this->belongsTo(Priority::class, 'priority_id');
     }
