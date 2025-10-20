@@ -23,8 +23,9 @@ export default function ListLayout({
         <div className="p-4">
             <div className="rounded-md bg-sidebar p-4">
                 <Button
-                    variant={'ghost'}
-                    size={'icon'}
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => window.history.back()}
                     className="flex w-fit cursor-pointer items-center gap-2 rounded-lg text-sm font-medium text-slate-300 transition hover:bg-sidebar hover:text-white"
                 >
                     <ChevronLeft className="h-4 w-4" />
@@ -81,7 +82,7 @@ export default function ListLayout({
                         className={
                             isKanbanActive
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'text-slate-600 hover:text-white'
+                                : 'text-slate-100 hover:text-white'
                         }
                     >
                         <Link href={kanban.show.url(list.id)}>Kanban</Link>
@@ -91,7 +92,7 @@ export default function ListLayout({
                         className={
                             isCalendarActive
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'text-slate-600 hover:text-white'
+                                : 'text-slate-100 hover:text-white'
                         }
                     >
                         <Link href={calendar.show.url(list.id)}>Calendar</Link>

@@ -3,10 +3,22 @@ import { Badge } from '@/components/ui/badge';
 import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
+import spaces from '@/routes/spaces';
 import { BreadcrumbItem } from '@/types';
 import { ListInterface } from '@/types/List';
 import { StatusInterface } from '@/types/statuses';
-import { MessageCircle, MoreVertical, Plus } from 'lucide-react';
+import { TaskInterface } from '@/types/task';
+import {
+    MessageCircle,
+    MoreVerticalIcon,
+    Plus,
+    UserCircle2,
+    WorkflowIcon,
+} from 'lucide-react';
+import { useState } from 'react';
+import { CreateTaskDialog } from '../Task/create';
+import { EditTaskDialog } from '../Task/edit';
+import { TaskDropDown } from '../Task/taskDropDown';
 import ListLayout from './ListLayout';
 interface Props {
     list: ListInterface;
@@ -14,16 +26,22 @@ interface Props {
 }
 
 export default function Kanban({ list, tasks }: Props) {
-    console.log(tasks);
     const getInitials = useInitials();
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
             href: dashboard().url,
         },
+        {
+            title: 'List',
+            href: spaces.index.url(),
+        },
+        {
+            title: list.name,
+            href: dashboard().url,
+        },
     ];
 
-    // Helper to add transparency to the status color
     const getTransparentColor = (hex: string, opacity = 0.15) => {
         if (!hex.startsWith('#')) return hex;
         const bigint = parseInt(hex.slice(1), 16);
@@ -31,6 +49,18 @@ export default function Kanban({ list, tasks }: Props) {
         const g = (bigint >> 8) & 255;
         const b = bigint & 255;
         return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    };
+
+    const [openCreateTask, setOpenCreateTask] = useState(false);
+    const [openEditTask, setOpenEditTask] = useState(false);
+    const [openDeleteTask, setOpenDeleteTask] = useState(false);
+    const [editTask, setEditTask] = useState<TaskInterface | null>(null);
+    const [deleteTask, setDeleteTask] = useState(Number);
+
+    const [statusId, setStatusId] = useState(Number);
+    const handleClickAddTask = (status: StatusInterface) => {
+        setOpenCreateTask(true);
+        setStatusId(status.id);
     };
 
     return (
@@ -63,11 +93,16 @@ export default function Kanban({ list, tasks }: Props) {
                                             </Badge>
                                         </div>
                                         <div className="flex items-center gap-1">
-                                            <button className="p-1 text-slate-300 transition-colors hover:text-white">
+                                            <button
+                                                className="cursor-pointer p-1 text-slate-300 transition-colors hover:text-white"
+                                                onClick={() =>
+                                                    handleClickAddTask(status)
+                                                }
+                                            >
                                                 <Plus className="h-4 w-4" />
                                             </button>
                                             <button className="p-1 text-slate-300 transition-colors hover:text-white">
-                                                <MoreVertical className="h-4 w-4" />
+                                                <MoreVerticalIcon />
                                             </button>
                                         </div>
                                     </div>
@@ -104,8 +139,22 @@ export default function Kanban({ list, tasks }: Props) {
                                                         >
                                                             {task.priority.name}
                                                         </Badge>
-
-                                                        <MoreVertical className="h-4 w-4 text-gray-200" />
+                                                        <TaskDropDown
+                                                            task={task}
+                                                            onEdit={(task) => {
+                                                                setEditTask(
+                                                                    task,
+                                                                );
+                                                                setOpenEditTask(
+                                                                    true,
+                                                                );
+                                                            }}
+                                                            onDelete={(task) =>
+                                                                setDeleteTask(
+                                                                    task.id,
+                                                                )
+                                                            }
+                                                        />
                                                     </div>
                                                 </div>
 
@@ -128,50 +177,78 @@ export default function Kanban({ list, tasks }: Props) {
                                                         {/* Users (Avatars) */}
                                                         <div className="ml-3 flex items-center">
                                                             <div className="flex flex-row flex-wrap items-center gap-12">
-                                                                <div className="flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-current *:data-[slot=avatar]:grayscale">
-                                                                    {(
-                                                                        task.users ??
-                                                                        []
-                                                                    )
-                                                                        .slice(
-                                                                            0,
-                                                                            5,
-                                                                        )
-                                                                        .map(
-                                                                            (
-                                                                                user,
-                                                                                index,
-                                                                            ) => (
-                                                                                <Avatar
-                                                                                    className="h-5 w-5"
-                                                                                    key={
-                                                                                        index
-                                                                                    }
-                                                                                >
-                                                                                    <AvatarFallback className="rounded-full">
-                                                                                        {getInitials(
-                                                                                            user.name,
-                                                                                        )}
-                                                                                    </AvatarFallback>
-                                                                                </Avatar>
-                                                                            ),
-                                                                        )}
-
+                                                                <div className="flex -space-x-2">
                                                                     {(task.users
                                                                         ?.length ??
                                                                         0) >
-                                                                        5 && (
-                                                                        <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-700 text-[10px] font-semibold text-white">
-                                                                            +
+                                                                    0 ? (
+                                                                        <>
+                                                                            {(
+                                                                                task.users ??
+                                                                                []
+                                                                            )
+                                                                                .slice(
+                                                                                    0,
+                                                                                    5,
+                                                                                )
+                                                                                .map(
+                                                                                    (
+                                                                                        user,
+                                                                                        index,
+                                                                                    ) => (
+                                                                                        <Avatar
+                                                                                            key={
+                                                                                                index
+                                                                                            }
+                                                                                            className="h-5 w-5"
+                                                                                        >
+                                                                                            {user.avatar ? (
+                                                                                                <AvatarImage
+                                                                                                    src={
+                                                                                                        user.avatar
+                                                                                                    }
+                                                                                                    alt={
+                                                                                                        user.name
+                                                                                                    }
+                                                                                                />
+                                                                                            ) : (
+                                                                                                <AvatarFallback className="rounded-full">
+                                                                                                    {getInitials(
+                                                                                                        user.name,
+                                                                                                    )}
+                                                                                                </AvatarFallback>
+                                                                                            )}
+                                                                                        </Avatar>
+                                                                                    ),
+                                                                                )}
+
                                                                             {(task
                                                                                 .users
                                                                                 ?.length ??
-                                                                                0) -
-                                                                                5}
-                                                                        </div>
+                                                                                0) >
+                                                                                5 && (
+                                                                                <div className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-700 text-[10px] font-semibold text-white">
+                                                                                    +
+                                                                                    {(task
+                                                                                        .users
+                                                                                        ?.length ??
+                                                                                        0) -
+                                                                                        5}
+                                                                                </div>
+                                                                            )}
+                                                                        </>
+                                                                    ) : (
+                                                                        <UserCircle2 className="h-5 w-5 text-slate-400" />
                                                                     )}
                                                                 </div>
                                                             </div>
+                                                        </div>
+
+                                                        <div className="ml-3 flex items-center gap-1">
+                                                            <WorkflowIcon className="h-3.5 w-3.5" />
+                                                            <span>
+                                                                2 subtask
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -183,6 +260,21 @@ export default function Kanban({ list, tasks }: Props) {
                         </div>
                     </div>
                 </div>
+                {openCreateTask && tasks && (
+                    <CreateTaskDialog
+                        open={openCreateTask}
+                        setOpen={setOpenCreateTask}
+                        statusId={statusId}
+                    />
+                )}
+
+                {editTask && openEditTask && (
+                    <EditTaskDialog
+                        open={openEditTask}
+                        setOpen={setOpenEditTask}
+                        taskEdit={editTask}
+                    />
+                )}
             </ListLayout>
         </AppLayout>
     );

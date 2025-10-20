@@ -20,25 +20,25 @@ import { User } from '@/types';
 import { ListInterface } from '@/types/List';
 import { PrioritiesInterface } from '@/types/priorities';
 import { StatusInterface } from '@/types/statuses';
-import { TaskForm } from '@/types/task';
+import { TaskForm, TaskInterface } from '@/types/task';
 import { useForm, usePage } from '@inertiajs/react';
 import { ChangeEventHandler, FormEventHandler } from 'react';
 import { toast } from 'sonner';
 interface Props {
     open: boolean;
     setOpen: (open: boolean) => void;
-    statusId?: number;
+    taskEdit?: TaskInterface;
 }
-export function CreateTaskDialog({ open, setOpen, statusId }: Props) {
+export function EditTaskDialog({ open, setOpen, taskEdit }: Props) {
     const { list } = usePage<{ list: ListInterface }>().props;
 
     const { data, setData, post, processing, reset, errors } =
         useForm<TaskForm>({
-            name: '',
-            description: '',
-            due_date: '',
-            priority_id: 0,
-            status_id: statusId ?? 0,
+            name: taskEdit?.name ?? '',
+            description: taskEdit?.description ?? '',
+            due_date: taskEdit?.due_date ?? '',
+            priority_id: taskEdit?.priority_id ?? 0,
+            status_id: taskEdit?.status_id ?? 0,
             list_task_id: list.id,
             assignees: [] as number[],
         });
@@ -130,6 +130,7 @@ export function CreateTaskDialog({ open, setOpen, statusId }: Props) {
                     </div>
                     <div className="mb-2 grid gap-4">
                         <Label>Assignee</Label>
+
                         <MultiSelectUser
                             users={systemUsers}
                             selectedUsers={systemUsers.filter((user) =>
@@ -179,7 +180,7 @@ export function CreateTaskDialog({ open, setOpen, statusId }: Props) {
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit">Create task</Button>
+                        <Button type="submit">Save changes</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

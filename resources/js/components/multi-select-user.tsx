@@ -1,5 +1,4 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     Command,
     CommandEmpty,
@@ -14,9 +13,10 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { useInitials } from '@/hooks/use-initials';
+
 import { cn } from '@/lib/utils';
 import { User } from '@/types';
-import { Check, ChevronDown, X } from 'lucide-react';
+import { Check, UserCircle2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface MultiSelectUserProps {
@@ -39,7 +39,6 @@ export default function MultiSelectUser({
     disabled = false,
 }: MultiSelectUserProps) {
     const [open, setOpen] = useState(false);
-
     const getInitials = useInitials();
 
     const handleSelect = (user: User) => {
@@ -72,53 +71,52 @@ export default function MultiSelectUser({
         <div className={cn('w-full', className)}>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-full justify-between"
+                    <button
+                        type="button"
                         disabled={disabled}
+                        className="flex w-full flex-wrap items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed"
                     >
-                        <div className="flex flex-1 flex-wrap gap-1">
+                        <UserCircle2
+                            className={`h-7 w-7 text-muted-foreground ${selectedUsers.length > 0 ? 'hidden' : ''}`}
+                        />
+                        <div className="flex flex-1 flex-wrap items-center gap-1">
                             {selectedUsers.length === 0 ? (
                                 <span className="text-muted-foreground">
                                     {placeholder}
                                 </span>
                             ) : (
-                                selectedUsers.map((user) => (
-                                    <Badge
-                                        key={user.id}
-                                        variant="secondary"
-                                        className="flex items-center text-xs"
-                                    >
-                                        {getInitials(user.name || 'U')}
-                                        <span
-                                            role="button"
-                                            tabIndex={0}
-                                            className="ml-1 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full hover:bg-secondary-foreground/20"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRemove(user.id);
-                                            }}
-                                            onKeyDown={(e) => {
-                                                if (
-                                                    e.key === 'Enter' ||
-                                                    e.key === ' '
-                                                ) {
-                                                    e.stopPropagation();
-                                                    handleRemove(user.id);
-                                                }
-                                            }}
-                                        >
-                                            <X className="h-3 w-3" />
-                                        </span>
-                                    </Badge>
-                                ))
+                                <div className="flex -space-x-2">
+                                    {selectedUsers
+                                        .slice(0, 5)
+                                        .map((user, index) => (
+                                            <Avatar
+                                                key={user.id || index}
+                                                className="h-8 w-8 border-2 border-background"
+                                            >
+                                                {user.avatar ? (
+                                                    <AvatarImage
+                                                        src={user.avatar}
+                                                        alt={user.name}
+                                                    />
+                                                ) : (
+                                                    <AvatarFallback className="rounded-full">
+                                                        {getInitials(user.name)}
+                                                    </AvatarFallback>
+                                                )}
+                                            </Avatar>
+                                        ))}
+
+                                    {selectedUsers.length > 5 && (
+                                        <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-slate-700 text-xs font-semibold text-white">
+                                            +{selectedUsers.length - 5}
+                                        </div>
+                                    )}
+                                </div>
                             )}
                         </div>
-                        <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
+                    </button>
                 </PopoverTrigger>
+
                 <PopoverContent className="w-full p-0" align="start">
                     <Command>
                         <CommandInput placeholder="Search users..." />
