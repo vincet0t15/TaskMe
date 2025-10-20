@@ -11,7 +11,7 @@ class TaskController extends Controller
     public function store(TaskStoreRequest $request)
     {
 
-        Task::create([
+        $task =  Task::create([
             'list_task_id' => $request->list_task_id,
             'name' => $request->name,
             'description' => $request->description,
@@ -19,6 +19,14 @@ class TaskController extends Controller
             'priority_id' => $request->priority_id,
             'due_date' => $request->due_date,
         ]);
+
+        if ($request->has('assignees') && is_array($request->assignees)) {
+            foreach ($request->assignees as $userId) {
+                $task->assignees()->create([
+                    'user_id' => $userId,
+                ]);
+            }
+        }
 
         return back()->withSuccess('Task created successfully');
     }

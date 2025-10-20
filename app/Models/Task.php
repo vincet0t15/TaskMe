@@ -32,4 +32,14 @@ class Task extends Model
     {
         return $this->belongsTo(Status::class);
     }
+
+    public function assignees()
+    {
+        return $this->hasMany(TaskAssignee::class, 'task_id');
+    }
+
+    public function users()
+    {
+        return $this->hasManyThrough(User::class, TaskAssignee::class, 'user_id', 'task_id');
+    }
 }

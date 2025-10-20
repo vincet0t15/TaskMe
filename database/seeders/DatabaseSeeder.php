@@ -26,6 +26,24 @@ class DatabaseSeeder extends Seeder
                 'office_id' => 1,
                 'password' => 'admin123',
             ],
+            [
+                'name' => 'Zyrus Vance B. Famini',
+                'username' => 'adminvance',
+                'office_id' => 1,
+                'password' => 'admin123',
+            ],
+            [
+                'name' => 'Renz Jansen Distal',
+                'username' => 'adminrenz',
+                'office_id' => 1,
+                'password' => 'admin123',
+            ],
+            [
+                'name' => 'Paul Christian Reformina',
+                'username' => 'adminpong',
+                'office_id' => 1,
+                'password' => 'admin123',
+            ],
         ];
 
         foreach ($users as $data) {

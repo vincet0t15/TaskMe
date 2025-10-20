@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { BreadcrumbItem } from '@/types';
@@ -51,9 +52,12 @@ export default function Kanban({ list, tasks }: Props) {
                                             <h3 className="text-sm font-semibold">
                                                 {status.name}
                                             </h3>
-                                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-900 text-xs font-medium text-slate-300">
+                                            <Badge
+                                                variant={'secondary'}
+                                                className="rounded-full"
+                                            >
                                                 {status.tasks.length}
-                                            </span>
+                                            </Badge>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <button className="p-1 text-slate-300 transition-colors hover:text-white">
@@ -70,43 +74,49 @@ export default function Kanban({ list, tasks }: Props) {
                                         {status.tasks.map((task) => (
                                             <div
                                                 key={task.id}
-                                                className="group cursor-pointer rounded-xl border border-slate-800 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+                                                className="group cursor-pointer rounded-xl border border-slate-800 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700 hover:shadow-lg"
                                                 style={{
                                                     backgroundColor:
                                                         getTransparentColor(
                                                             status.color,
-                                                            0.2,
+                                                            0.18,
                                                         ),
+                                                    backdropFilter: 'blur(4px)',
                                                 }}
                                             >
-                                                {/* Task Badge */}
-                                                <span
-                                                    className="mb-2 inline-block rounded-md border border-transparent px-2 py-0.5 text-xs font-semibold text-white"
-                                                    style={{
-                                                        backgroundColor:
-                                                            task.priority.color,
-                                                    }}
-                                                >
-                                                    {task.priority.name}
-                                                </span>
+                                                {/* Header section — Priority + Task name */}
+                                                <div className="mb-2 flex items-center justify-between">
+                                                    <span className="truncate text-sm font-semibold text-slate-300">
+                                                        {task.name}
+                                                    </span>
+                                                    <span
+                                                        className="inline-block rounded-md border border-transparent px-2 py-0.5 text-xs font-semibold text-white shadow-sm"
+                                                        style={{
+                                                            backgroundColor:
+                                                                task.priority
+                                                                    .color,
+                                                        }}
+                                                    >
+                                                        {task.priority.name}
+                                                    </span>
 
-                                                {/* Task Description */}
-                                                <h4 className="mb-3 line-clamp-2 text-sm leading-snug font-medium text-slate-100">
+                                                    {/* Optional task name badge */}
+                                                </div>
+
+                                                {/* Description */}
+                                                <p className="mb-3 line-clamp-2 text-sm leading-snug text-slate-100/90">
                                                     {task.description ||
-                                                        task.name}
-                                                </h4>
+                                                        'No description provided.'}
+                                                </p>
 
                                                 {/* Footer */}
-                                                <div className="flex items-center justify-between pt-1">
-                                                    <div className="flex items-center space-x-3 text-slate-400">
-                                                        <div className="flex items-center gap-1 text-xs">
-                                                            <MessageCircle className="h-3.5 w-3.5" />
-                                                            <span>2</span>
-                                                        </div>
-                                                        <div className="flex items-center gap-1 text-xs">
-                                                            <Heart className="h-3.5 w-3.5" />
-                                                            <span>1</span>
-                                                        </div>
+                                                <div className="flex items-center justify-between border-t border-slate-700/40 pt-2 text-xs text-slate-400">
+                                                    {/* Could replace with assigned user avatars later */}
+                                                    <div className="flex items-center gap-2">
+                                                        <MessageCircle className="h-3.5 w-3.5" />
+                                                        <span>2</span>
+                                                        <Heart className="ml-3 h-3.5 w-3.5" />
+                                                        <span>1</span>
                                                     </div>
                                                 </div>
                                             </div>
