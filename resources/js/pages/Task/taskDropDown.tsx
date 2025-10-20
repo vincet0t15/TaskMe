@@ -28,6 +28,7 @@ export function TaskDropDown({ task, onEdit, onDelete }: Props) {
                     <PenIcon className="mr-2 h-4 w-4" />
                     Edit
                 </DropdownMenuItem>
+
                 <DropdownMenuItem
                     onClick={() => onDelete(task)}
                     className="cursor-pointer text-orange-500 focus:text-orange-500"

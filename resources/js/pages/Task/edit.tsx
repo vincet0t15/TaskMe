@@ -32,16 +32,17 @@ interface Props {
 export function EditTaskDialog({ open, setOpen, taskEdit }: Props) {
     const { list } = usePage<{ list: ListInterface }>().props;
 
-    const { data, setData, post, processing, reset, errors } =
-        useForm<TaskForm>({
+    const { data, setData, put, processing, reset, errors } = useForm<TaskForm>(
+        {
             name: taskEdit?.name ?? '',
             description: taskEdit?.description ?? '',
             due_date: taskEdit?.due_date ?? '',
             priority_id: taskEdit?.priority_id ?? 0,
             status_id: taskEdit?.status_id ?? 0,
             list_task_id: list.id,
-            assignees: [] as number[],
-        });
+            assignees: taskEdit?.users?.map((user) => user.id) ?? [],
+        },
+    );
 
     const { systemStatuses } = usePage().props;
     const { systemPriorities } = usePage().props;
@@ -83,7 +84,12 @@ export function EditTaskDialog({ open, setOpen, taskEdit }: Props) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(task.store.url(), {
+        if (!taskEdit?.id) {
+            toast.error('No task selected to update.');
+            return;
+        }
+
+        put(task.update.url(taskEdit.id), {
             onSuccess: (response: { props: FlashProps }) => {
                 toast.success(response.props.flash?.success);
                 reset();

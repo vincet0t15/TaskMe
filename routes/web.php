@@ -36,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // TASK
     Route::post('tasks', [TaskController::class, 'store'])->name('task.store');
+    Route::put('tasks/{task}', [TaskController::class, 'update'])->name('task.update');
 
     // Calendar
     Route::get('calendar/{list}', [CalendarController::class, 'show'])->name('calendar.show');
