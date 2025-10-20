@@ -112,15 +112,15 @@ export default function Kanban({ list, tasks }: Props) {
                                         {status.tasks.map((task) => (
                                             <div
                                                 key={task.id}
-                                                className="group cursor-pointer rounded-xl border border-slate-800 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700 hover:shadow-lg"
-                                                style={{
-                                                    backgroundColor:
-                                                        getTransparentColor(
-                                                            status.color,
-                                                            0.18,
-                                                        ),
-                                                    backdropFilter: 'blur(4px)',
-                                                }}
+                                                className="group cursor-pointer rounded-xl border border-slate-500 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700"
+                                                // style={{
+                                                //     backgroundColor:
+                                                //         getTransparentColor(
+                                                //             status.color,
+                                                //             0.18,
+                                                //         ),
+                                                //     backdropFilter: 'blur(4px)',
+                                                // }}
                                             >
                                                 {/* Header section — Priority + Task name */}
                                                 <div className="mb-2 flex items-center justify-between">
