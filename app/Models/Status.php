@@ -12,6 +12,10 @@ class Status extends Model
     protected $fillable = [
         'name',
         'color',
-
     ];
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'status_id');
+    }
 }

@@ -13,7 +13,7 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { ListInterface } from '@/types/List';
 import { PaginatedDataResponse } from '@/types/pagination';
-import { TaskInterface } from '@/types/task';
+import { StatusInterface } from '@/types/statuses';
 import { AlertTriangleIcon, Clock } from 'lucide-react';
 import ListLayout from './ListLayout';
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,7 +25,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface Props {
     list: ListInterface;
-    tasks: PaginatedDataResponse<TaskInterface>;
+    tasks: PaginatedDataResponse<StatusInterface>;
 }
 
 export default function TableList({ list, tasks }: Props) {
