@@ -1,18 +1,21 @@
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { BreadcrumbItem } from '@/types';
 import { ListInterface } from '@/types/List';
 import { StatusInterface } from '@/types/statuses';
-import { Heart, MessageCircle, MoreVertical, Plus } from 'lucide-react';
+import { MessageCircle, MoreVertical, Plus } from 'lucide-react';
 import ListLayout from './ListLayout';
-
 interface Props {
     list: ListInterface;
     tasks: StatusInterface[];
 }
 
 export default function Kanban({ list, tasks }: Props) {
+    console.log(tasks);
+    const getInitials = useInitials();
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
@@ -89,18 +92,21 @@ export default function Kanban({ list, tasks }: Props) {
                                                     <span className="truncate text-sm font-semibold text-slate-300">
                                                         {task.name}
                                                     </span>
-                                                    <span
-                                                        className="inline-block rounded-md border border-transparent px-2 py-0.5 text-xs font-semibold text-white shadow-sm"
-                                                        style={{
-                                                            backgroundColor:
-                                                                task.priority
-                                                                    .color,
-                                                        }}
-                                                    >
-                                                        {task.priority.name}
-                                                    </span>
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <Badge
+                                                            className="text-white"
+                                                            style={{
+                                                                backgroundColor:
+                                                                    task
+                                                                        .priority
+                                                                        .color,
+                                                            }}
+                                                        >
+                                                            {task.priority.name}
+                                                        </Badge>
 
-                                                    {/* Optional task name badge */}
+                                                        <MoreVertical className="h-4 w-4 text-gray-200" />
+                                                    </div>
                                                 </div>
 
                                                 {/* Description */}
@@ -110,13 +116,63 @@ export default function Kanban({ list, tasks }: Props) {
                                                 </p>
 
                                                 {/* Footer */}
-                                                <div className="flex items-center justify-between border-t border-slate-700/40 pt-2 text-xs text-slate-400">
-                                                    {/* Could replace with assigned user avatars later */}
+                                                <div className="flex items-center justify-between border-t border-slate-500/40 pt-2 text-xs text-slate-400">
+                                                    {/* Comments and Assigned Users */}
                                                     <div className="flex items-center gap-2">
-                                                        <MessageCircle className="h-3.5 w-3.5" />
-                                                        <span>2</span>
-                                                        <Heart className="ml-3 h-3.5 w-3.5" />
-                                                        <span>1</span>
+                                                        {/* Comments Count */}
+                                                        <div className="flex items-center gap-1">
+                                                            <MessageCircle className="h-3.5 w-3.5" />
+                                                            <span>2</span>
+                                                        </div>
+
+                                                        {/* Users (Avatars) */}
+                                                        <div className="ml-3 flex items-center">
+                                                            <div className="flex flex-row flex-wrap items-center gap-12">
+                                                                <div className="flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-current *:data-[slot=avatar]:grayscale">
+                                                                    {(
+                                                                        task.users ??
+                                                                        []
+                                                                    )
+                                                                        .slice(
+                                                                            0,
+                                                                            5,
+                                                                        )
+                                                                        .map(
+                                                                            (
+                                                                                user,
+                                                                                index,
+                                                                            ) => (
+                                                                                <Avatar
+                                                                                    className="h-5 w-5"
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                >
+                                                                                    <AvatarFallback className="rounded-full">
+                                                                                        {getInitials(
+                                                                                            user.name,
+                                                                                        )}
+                                                                                    </AvatarFallback>
+                                                                                </Avatar>
+                                                                            ),
+                                                                        )}
+
+                                                                    {(task.users
+                                                                        ?.length ??
+                                                                        0) >
+                                                                        5 && (
+                                                                        <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-700 text-[10px] font-semibold text-white">
+                                                                            +
+                                                                            {(task
+                                                                                .users
+                                                                                ?.length ??
+                                                                                0) -
+                                                                                5}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

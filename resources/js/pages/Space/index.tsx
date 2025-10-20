@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import lists from '@/routes/lists';
 import spaces from '@/routes/spaces';
 import { type BreadcrumbItem } from '@/types';
 import { FilterProps } from '@/types/filter';
@@ -22,6 +21,7 @@ import { SpaceInterface } from '@/types/Space';
 import { Head, router, useForm } from '@inertiajs/react';
 
 import { Checkbox } from '@/components/ui/checkbox';
+import kanban from '@/routes/kanban';
 import { ChevronDown, ChevronRight, PlusIcon } from 'lucide-react';
 import React, { KeyboardEventHandler, useState } from 'react';
 import { CreateSpace } from './create';
@@ -70,7 +70,7 @@ export default function SpaceIndex({ spaces, filters }: Props) {
     };
 
     const handleClickChildName = (list: ListInterface) => {
-        router.get(lists.show.url({ list: list.id }));
+        router.get(kanban.show.url({ list: list.id }));
     };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

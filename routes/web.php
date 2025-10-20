@@ -41,7 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('calendar/{list}', [CalendarController::class, 'show'])->name('calendar.show');
 
     // Kanban
-    Route::get('kanban/{list}', [KanbanController::class, 'show'])->name('kanban.show');
+    Route::get('spaces/kanban/{list}', [KanbanController::class, 'show'])->name('kanban.show');
 });
 
 require __DIR__ . '/settings.php';

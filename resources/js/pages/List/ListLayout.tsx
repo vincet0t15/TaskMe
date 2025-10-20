@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button';
 import calendar from '@/routes/calendar';
 import kanban from '@/routes/kanban';
-import lists from '@/routes/lists';
 import { ListInterface } from '@/types/List';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { ChevronLeft, PlusIcon, Share2 } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { CreateTaskDialog } from '../Task/create';
@@ -15,6 +14,11 @@ export default function ListLayout({
     children,
 }: PropsWithChildren<Props>) {
     const [openCreateTask, setOpenCreateTask] = useState(false);
+    const { url } = usePage();
+
+    const isKanbanActive = url === kanban.show.url(list.id);
+    const isCalendarActive = url === calendar.show.url(list.id);
+
     return (
         <div className="p-4">
             <div className="rounded-md bg-sidebar p-4">
@@ -68,14 +72,28 @@ export default function ListLayout({
                 </div>
             </div>
             <div className="mt-2 flex w-full justify-between gap-2 rounded-md bg-sidebar p-1">
-                <div>
-                    <Button variant={'ghost'}>
+                <div className="gap-2">
+                    {/* <Button variant={'ghost'}>
                         <Link href={lists.show.url(list.id)}>List</Link>
-                    </Button>
-                    <Button variant={'ghost'}>
+                    </Button> */}
+                    <Button
+                        variant={isKanbanActive ? 'default' : 'ghost'}
+                        className={
+                            isKanbanActive
+                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'text-slate-600 hover:text-white'
+                        }
+                    >
                         <Link href={kanban.show.url(list.id)}>Kanban</Link>
                     </Button>
-                    <Button variant={'ghost'}>
+                    <Button
+                        variant={isCalendarActive ? 'default' : 'ghost'}
+                        className={
+                            isCalendarActive
+                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'text-slate-600 hover:text-white'
+                        }
+                    >
                         <Link href={calendar.show.url(list.id)}>Calendar</Link>
                     </Button>
                 </div>

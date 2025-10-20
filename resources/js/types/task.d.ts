@@ -1,3 +1,4 @@
+import { User } from '.';
 import { PrioritiesInterface } from './priorities';
 import { StatusInterface } from './statuses';
 
@@ -21,4 +22,5 @@ export interface TaskInterface {
     due_date: string;
     priority: PrioritiesInterface;
     status: StatusInterface;
+    users?: User[];
 }

@@ -15,7 +15,7 @@ import { dashboard } from '@/routes';
 import spaces from '@/routes/spaces';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, WorkflowIcon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -27,7 +27,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'My Space',
         href: spaces.index.url(),
-        icon: LayoutGrid,
+        icon: WorkflowIcon,
     },
 ];
 
@@ -49,7 +49,7 @@ export function AppSidebar() {
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
-                    <SidebarMenuItem>
+                    <SidebarMenuItem className="rounded-sm bg-accent">
                         <SidebarMenuButton size="lg" asChild>
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />

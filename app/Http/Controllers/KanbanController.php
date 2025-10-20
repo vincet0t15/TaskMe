@@ -11,10 +11,16 @@ class KanbanController extends Controller
 {
     public function show(ListTask $list)
     {
-        $tasks = Status::with(['tasks' => function ($query) use ($list) {
-            $query->with('priority', 'status')
-                ->where('list_task_id', $list->id);
-        }])->get();
+        $tasks = Status::with([
+            'tasks' => function ($query) use ($list) {
+                $query->where('list_task_id', $list->id)
+                    ->with(['priority', 'status', 'users']);
+            }
+        ])
+            ->whereHas('tasks', function ($query) use ($list) {
+                $query->where('list_task_id', $list->id);
+            })
+            ->get();
 
         return Inertia::render('List/Kanban', [
             'list' => $list,

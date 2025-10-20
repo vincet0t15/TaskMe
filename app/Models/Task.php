@@ -40,6 +40,6 @@ class Task extends Model
 
     public function users()
     {
-        return $this->hasManyThrough(User::class, TaskAssignee::class, 'user_id', 'task_id');
+        return $this->hasManyThrough(User::class, TaskAssignee::class, 'task_id', 'id', 'id', 'user_id');
     }
 }
