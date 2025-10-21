@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Task extends Model
+class SubTask extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
-        'list_task_id',
+        'task_id',
         'name',
         'description',
         'status_id',
@@ -23,9 +23,9 @@ class Task extends Model
         return $this->belongsTo(Priority::class, 'priority_id');
     }
 
-    public function list()
+    public function task()
     {
-        return $this->belongsTo(ListTask::class, 'list_task_id');
+        return $this->belongsTo(Task::class, 'task_id');
     }
 
     public function status()
@@ -33,18 +33,13 @@ class Task extends Model
         return $this->belongsTo(Status::class);
     }
 
-    public function assignees()
-    {
-        return $this->hasMany(TaskAssignee::class, 'task_id');
-    }
-
     public function users()
     {
-        return $this->hasManyThrough(User::class, TaskAssignee::class, 'task_id', 'id', 'id', 'user_id');
+        return $this->hasManyThrough(User::class, SubTaskAssignee::class, 'sub_task_id', 'id', 'id', 'user_id');
     }
 
-    public function subTasks()
+    public function assignees()
     {
-        return $this->hasMany(SubTask::class, 'task_id');
+        return $this->hasMany(SubTaskAssignee::class, 'sub_task_id');
     }
 }

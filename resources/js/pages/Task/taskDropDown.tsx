@@ -5,13 +5,19 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { TaskInterface } from '@/types/task';
-import { MoreVerticalIcon, PenIcon, Trash2 } from 'lucide-react';
+import { MoreVerticalIcon, PenIcon, PlusIcon, Trash2 } from 'lucide-react';
 interface Props {
     task: TaskInterface;
     onEdit: (task: TaskInterface) => void;
     onDelete: (task: TaskInterface) => void;
+    onCreateSubTask: (task: TaskInterface) => void;
 }
-export function TaskDropDown({ task, onEdit, onDelete }: Props) {
+export function TaskDropDown({
+    task,
+    onEdit,
+    onDelete,
+    onCreateSubTask,
+}: Props) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -28,7 +34,13 @@ export function TaskDropDown({ task, onEdit, onDelete }: Props) {
                     <PenIcon className="mr-2 h-4 w-4" />
                     Edit
                 </DropdownMenuItem>
-
+                <DropdownMenuItem
+                    onClick={() => onCreateSubTask(task)}
+                    className="cursor-pointer"
+                >
+                    <PlusIcon className="mr-2 h-4 w-4" />
+                    Add subtask
+                </DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={() => onDelete(task)}
                     className="cursor-pointer text-orange-500 focus:text-orange-500"

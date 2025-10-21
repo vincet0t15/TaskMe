@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskRequest\TaskStoreRequest;
-use App\Models\Task;
+use App\Http\Requests\SubTaskRequest\SubTaskStoreRequest;
+use App\Models\SubTask;
 use Illuminate\Http\Request;
 
-class TaskController extends Controller
+class SubTaskController extends Controller
 {
-    public function store(TaskStoreRequest $request)
+    public function store(SubTaskStoreRequest $request)
     {
-
-        $task =  Task::create([
-            'list_task_id' => $request->list_task_id,
+        $subTask = SubTask::create([
             'name' => $request->name,
+            'task_id' => $request->task_id,
             'description' => $request->description,
             'status_id' => $request->status_id,
             'priority_id' => $request->priority_id,
@@ -22,40 +21,42 @@ class TaskController extends Controller
 
         if ($request->has('assignees') && is_array($request->assignees)) {
             foreach ($request->assignees as $userId) {
-                $task->assignees()->create([
+                $subTask->assignees()->create([
                     'user_id' => $userId,
                 ]);
             }
         }
 
-        return back()->withSuccess('Task created successfully');
+        return back()->withSuccess('Subtask created successfully');
     }
 
-    public function update(Request $request, Task $task)
+    public function update(Request $request, SubTask $subTask)
     {
-        $task->update([
-            'list_task_id' => $request->list_task_id,
+        $subTask->update([
             'name' => $request->name,
+            'task_id' => $request->task_id,
             'description' => $request->description,
             'status_id' => $request->status_id,
             'priority_id' => $request->priority_id,
             'due_date' => $request->due_date,
         ]);
 
-
+        // Update assignees
         if ($request->has('assignees') && is_array($request->assignees)) {
+            // Delete existing assignees
+            $subTask->assignees()->delete();
 
-            $task->assignees()->delete();
-
+            // Add new assignees
             foreach ($request->assignees as $userId) {
-                $task->assignees()->create([
+                $subTask->assignees()->create([
                     'user_id' => $userId,
                 ]);
             }
         } elseif ($request->has('assignees')) {
-            $task->assignees()->delete();
+            // If assignees is present but empty array, remove all
+            $subTask->assignees()->delete();
         }
 
-        return back()->withSuccess('Task updated successfully');
+        return redirect()->back()->with('success', 'Subtask updated successfully.');
     }
 }

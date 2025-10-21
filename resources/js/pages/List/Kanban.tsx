@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
@@ -15,11 +14,12 @@ import {
     MoreVerticalIcon,
     Plus,
     UserCircle2,
-    WorkflowIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import { CreateTaskDialog } from '../Task/create';
+import { CreateSubTaskDialog } from '../Task/createSubTask';
 import { EditTaskDialog } from '../Task/edit';
+import { DrawerDemo } from '../Task/subTask';
 import { TaskDropDown } from '../Task/taskDropDown';
 import ListLayout from './ListLayout';
 interface Props {
@@ -75,9 +75,10 @@ export default function Kanban({ list, tasks }: Props) {
 
     const [openCreateTask, setOpenCreateTask] = useState(false);
     const [openEditTask, setOpenEditTask] = useState(false);
-    const [openDeleteTask, setOpenDeleteTask] = useState(false);
     const [editTask, setEditTask] = useState<TaskInterface | null>(null);
     const [deleteTask, setDeleteTask] = useState(Number);
+    const [openCreateSubTask, setOpenCreateSubtask] = useState(false);
+    const [task, setTask] = useState<TaskInterface | null>(null);
 
     const [statusId, setStatusId] = useState(Number);
     const handleClickAddTask = (status: StatusInterface) => {
@@ -95,6 +96,12 @@ export default function Kanban({ list, tasks }: Props) {
         const lightness = 35 + Math.abs(hash % 10);
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
+
+    const handleClickCreateSubTask = (task: TaskInterface) => {
+        setOpenCreateSubtask(true);
+        setTask(task);
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <ListLayout list={list}>
@@ -175,6 +182,13 @@ export default function Kanban({ list, tasks }: Props) {
                                                                     task.id,
                                                                 )
                                                             }
+                                                            onCreateSubTask={(
+                                                                task,
+                                                            ) =>
+                                                                handleClickCreateSubTask(
+                                                                    task,
+                                                                )
+                                                            }
                                                         />
                                                     </div>
                                                 </div>
@@ -188,18 +202,18 @@ export default function Kanban({ list, tasks }: Props) {
                                                 {/* Footer */}
                                                 <div className="flex items-center justify-between border-t border-slate-500/40 pt-2 text-xs text-slate-400">
                                                     {/* Comments and Assigned Users */}
-                                                    <div className="flex items-center gap-1">
-                                                        {/* Comments Count */}
-                                                        <div className="flex items-center gap-1">
-                                                            <MessageCircle className="h-3.5 w-3.5" />
-                                                            <span>2</span>
-                                                        </div>
 
-                                                        {/* Users (Avatars) */}
-                                                        <div className="ml-1 flex items-center">
-                                                            <div className="flex flex-row flex-wrap items-center gap-12">
-                                                                <div className="flex -space-x-2">
-                                                                    {(task.users
+                                                    {/* Comments Count */}
+                                                    <div className="flex items-center gap-1">
+                                                        <MessageCircle className="h-3.5 w-3.5" />
+                                                        <span>2</span>
+                                                    </div>
+
+                                                    {/* Users (Avatars) */}
+                                                    <div className="flex items-center gap-1">
+                                                        <UserCircle2 className="h-4.5 w-4.5 text-slate-400" />
+                                                        {task.users?.length}
+                                                        {/* {(task.users
                                                                         ?.length ??
                                                                         0) >
                                                                     0 ? (
@@ -249,74 +263,65 @@ export default function Kanban({ list, tasks }: Props) {
                                                                         </>
                                                                     ) : (
                                                                         <UserCircle2 className="h-5 w-5 text-slate-400" />
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                                    )} */}
+                                                    </div>
 
-                                                        <div
-                                                            className="ml-1 flex items-center gap-1"
-                                                            onClick={() =>
-                                                                console.log(
-                                                                    'Test',
-                                                                )
+                                                    <div>
+                                                        <DrawerDemo
+                                                            subTask={
+                                                                task.sub_tasks
                                                             }
-                                                        >
-                                                            <WorkflowIcon className="h-3.5 w-3.5" />
-                                                            <span>
-                                                                2 subtask
-                                                            </span>
-                                                        </div>
-                                                        <div className="ml-3 flex items-center gap-1">
-                                                            {(() => {
-                                                                const dueDate =
-                                                                    task?.due_date;
-                                                                const isOverdue =
-                                                                    dueDate &&
-                                                                    new Date(
-                                                                        dueDate,
-                                                                    ) <
-                                                                        new Date();
+                                                        />
+                                                    </div>
 
-                                                                if (dueDate) {
-                                                                    return (
-                                                                        <div
-                                                                            className={`flex items-center gap-1 text-xs ${
-                                                                                isOverdue
-                                                                                    ? 'text-red-400'
-                                                                                    : 'text-gray-400'
-                                                                            }`}
-                                                                            title={
-                                                                                isOverdue
-                                                                                    ? 'Overdue'
-                                                                                    : 'Due Date'
-                                                                            }
-                                                                        >
-                                                                            {isOverdue ? (
-                                                                                <AlertTriangle className="h-3 w-3" />
-                                                                            ) : (
-                                                                                <Clock className="h-3 w-3" />
-                                                                            )}
-                                                                            {new Date(
-                                                                                dueDate,
-                                                                            ).toLocaleDateString(
-                                                                                'en-US',
-                                                                                {
-                                                                                    month: 'short',
-                                                                                    day: 'numeric',
-                                                                                },
-                                                                            )}
-                                                                        </div>
-                                                                    );
-                                                                }
+                                                    <div className="flex items-center gap-1">
+                                                        {(() => {
+                                                            const dueDate =
+                                                                task?.due_date;
+                                                            const isOverdue =
+                                                                dueDate &&
+                                                                new Date(
+                                                                    dueDate,
+                                                                ) < new Date();
 
+                                                            if (dueDate) {
                                                                 return (
-                                                                    <span className="text-gray-500">
-                                                                        —
-                                                                    </span>
+                                                                    <div
+                                                                        className={`flex items-center gap-1 text-xs ${
+                                                                            isOverdue
+                                                                                ? 'text-red-400'
+                                                                                : 'text-gray-400'
+                                                                        }`}
+                                                                        title={
+                                                                            isOverdue
+                                                                                ? 'Overdue'
+                                                                                : 'Due Date'
+                                                                        }
+                                                                    >
+                                                                        {isOverdue ? (
+                                                                            <AlertTriangle className="h-3 w-3" />
+                                                                        ) : (
+                                                                            <Clock className="h-3 w-3" />
+                                                                        )}
+                                                                        {new Date(
+                                                                            dueDate,
+                                                                        ).toLocaleDateString(
+                                                                            'en-US',
+                                                                            {
+                                                                                month: 'short',
+                                                                                day: 'numeric',
+                                                                            },
+                                                                        )}
+                                                                    </div>
                                                                 );
-                                                            })()}
-                                                        </div>
+                                                            }
+
+                                                            return (
+                                                                <span className="text-gray-500">
+                                                                    —
+                                                                </span>
+                                                            );
+                                                        })()}
                                                     </div>
                                                 </div>
                                             </div>
@@ -340,6 +345,14 @@ export default function Kanban({ list, tasks }: Props) {
                         open={openEditTask}
                         setOpen={setOpenEditTask}
                         taskEdit={editTask}
+                    />
+                )}
+
+                {openCreateSubTask && task && (
+                    <CreateSubTaskDialog
+                        open={openCreateSubTask}
+                        setOpen={setOpenCreateSubtask}
+                        task={task}
                     />
                 )}
             </ListLayout>

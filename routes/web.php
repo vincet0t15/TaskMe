@@ -5,6 +5,7 @@ use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\ListTaskController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SpaceController;
+use App\Http\Controllers\SubTaskController;
 use App\Http\Controllers\TaskController;
 use App\Models\ListTask;
 use App\Models\Space;
@@ -43,6 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Kanban
     Route::get('spaces/kanban/{list}', [KanbanController::class, 'show'])->name('kanban.show');
+
+    // SUBTASK
+    Route::post('subtasks', [SubTaskController::class, 'store'])->name('subtask.store');
 });
 
 require __DIR__ . '/settings.php';
