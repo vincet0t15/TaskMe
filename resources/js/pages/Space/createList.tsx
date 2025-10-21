@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import list from '@/routes/list';
 import { ListTypes } from '@/types/List';
 import { PrioritiesInterface } from '@/types/priorities';
@@ -31,6 +32,7 @@ export function CreateList({ open, setOpen, space }: Props) {
     const { data, setData, post, processing, reset, errors } =
         useForm<ListTypes>({
             name: '',
+            description: '',
             space_id: space.id,
             priority_id: 0,
         });
@@ -43,7 +45,9 @@ export function CreateList({ open, setOpen, space }: Props) {
         }),
     );
 
-    const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const handleInputChange: ChangeEventHandler<
+        HTMLInputElement | HTMLTextAreaElement
+    > = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     };
 
@@ -87,6 +91,16 @@ export function CreateList({ open, setOpen, space }: Props) {
                                 placeholder="Enter list name"
                             />
                             <InputError message={errors.name} />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="name-1">Description</Label>
+                            <Textarea
+                                onChange={handleInputChange}
+                                name="description"
+                                value={data.description}
+                                placeholder="Description"
+                            />
+                            <InputError message={errors.description} />
                         </div>
                         <div className="grid flex-1 gap-3">
                             <Label>Priority</Label>

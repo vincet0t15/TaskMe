@@ -16,6 +16,7 @@ class ListTaskController extends Controller
     {
         ListTask::create([
             'name' => $request->name,
+            'description' => $request->description,
             'space_id' => $request->space_id,
             'priority_id' => $request->priority_id
         ]);
@@ -25,7 +26,7 @@ class ListTaskController extends Controller
 
     public function update(TaskListUpdateRequest $request, ListTask $list)
     {
-        $list->update(['name' => $request->name]);
+        $list->update(['name' => $request->name, 'description' => $request->description, 'priority_id' => $request->priority_id]);
 
         return redirect()->back()->withSuccess('List updated successfully');
     }

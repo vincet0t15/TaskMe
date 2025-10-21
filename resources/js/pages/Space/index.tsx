@@ -84,7 +84,7 @@ export default function SpaceIndex({ spaces, filters }: Props) {
                         onClick={() => setOpenCreate(true)}
                     >
                         <PlusIcon />
-                        Create Project
+                        Create Space
                     </Button>
                     <div className="flex items-center gap-2">
                         <Input

@@ -3,7 +3,7 @@ import calendar from '@/routes/calendar';
 import kanban from '@/routes/kanban';
 import { ListInterface } from '@/types/List';
 import { Link, usePage } from '@inertiajs/react';
-import { ChevronLeft, PlusIcon, Share2 } from 'lucide-react';
+import { ChevronLeft, PlusIcon } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { CreateTaskDialog } from '../Task/create';
 interface Props {
@@ -46,37 +46,10 @@ export default function ListLayout({
                             </p>
                         </div>
                     </div>
-
-                    {/* Right: Avatars and Invite button */}
-                    <div className="flex items-center space-x-3">
-                        <div className="flex items-center -space-x-1">
-                            {Array(3)
-                                .fill(null)
-                                .map((_, i) => (
-                                    <img
-                                        key={i}
-                                        src={`https://i.pravatar.cc/32?img=${30 + i}`}
-                                        alt={`Avatar ${i + 1}`}
-                                        className="h-7 w-7 rounded-full border-2 border-slate-900"
-                                    />
-                                ))}
-                            <span className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-800 text-xs text-white">
-                                +10
-                            </span>
-                        </div>
-
-                        <button className="flex items-center rounded-sm bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-500">
-                            <Share2 className="mr-2 h-4 w-4" />
-                            Invite
-                        </button>
-                    </div>
                 </div>
             </div>
             <div className="mt-2 flex w-full justify-between gap-2 rounded-md bg-sidebar p-1">
                 <div className="gap-2">
-                    {/* <Button variant={'ghost'}>
-                        <Link href={lists.show.url(list.id)}>List</Link>
-                    </Button> */}
                     <Button
                         variant={isKanbanActive ? 'default' : 'ghost'}
                         className={

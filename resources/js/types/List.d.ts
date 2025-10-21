@@ -13,6 +13,7 @@ export interface ListInterface {
 
 export type ListTypes = {
     name: string;
+    description: string;
     space_id?: number;
     priority_id?: number;
 };
