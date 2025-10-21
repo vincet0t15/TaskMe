@@ -24,6 +24,7 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+
     {
         title: 'My Space',
         href: spaces.index.url(),
@@ -46,7 +47,7 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="offcanvas" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem className="rounded-sm bg-accent">
