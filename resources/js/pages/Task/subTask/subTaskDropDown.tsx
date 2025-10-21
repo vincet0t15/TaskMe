@@ -10,12 +10,14 @@ import { SubTaskInterface } from '@/types/subTask';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import { MoreHorizontal, PenLine, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import DeleteSubTask from './deleteSubTask';
 import { EditSubTaskDialog } from './editSubtask';
 interface Props {
     subTask: SubTaskInterface;
 }
 export function SubTaskDropDown({ subTask }: Props) {
     const [openEditSubTask, setOpenEditSubTask] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild className="cursor-pointer">
@@ -30,7 +32,10 @@ export function SubTaskDropDown({ subTask }: Props) {
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-orange-500 hover:text-orange-500">
+                    <DropdownMenuItem
+                        className="text-orange-500 hover:text-orange-500"
+                        onClick={() => setOpenDelete(true)}
+                    >
                         Delete
                         <DropdownMenuShortcut>
                             <Trash2 className="text-orange-500" />
@@ -42,6 +47,14 @@ export function SubTaskDropDown({ subTask }: Props) {
                 <EditSubTaskDialog
                     open={openEditSubTask}
                     setOpen={setOpenEditSubTask}
+                    subTasks={subTask}
+                />
+            )}
+
+            {openDelete && subTask && (
+                <DeleteSubTask
+                    open={openDelete}
+                    setOpen={setOpenDelete}
                     subTasks={subTask}
                 />
             )}

@@ -17,9 +17,9 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { CreateTaskDialog } from '../Task/create';
-import { CreateSubTaskDialog } from '../Task/createSubTask';
 import { EditTaskDialog } from '../Task/edit';
-import { Subtask } from '../Task/subTask';
+import { CreateSubTaskDialog } from '../Task/subTask/createSubTask';
+import { Subtask } from '../Task/subTask/subTask';
 import { TaskDropDown } from '../Task/taskDropDown';
 import ListLayout from './ListLayout';
 interface Props {
