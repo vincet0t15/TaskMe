@@ -71,100 +71,94 @@ export function Subtask({ subTask }: Props) {
                     ) : (
                         <div className="space-y-3 px-3 pb-6 transition-all sm:px-4 md:px-6">
                             {subTask.map((data, index) => {
-                                const dueDate = data?.due_date
-                                    ? new Date(data.due_date)
-                                    : null;
-
                                 return (
                                     <div
                                         key={index}
                                         className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-accent/30 p-3 shadow-sm transition-all hover:shadow-md sm:p-4"
                                     >
                                         {/* Title + Meta */}
-                                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-                                                <div className="text-sm font-semibold text-gray-200 sm:text-base">
-                                                    {data.name}
-                                                </div>
-                                                <div className="mt-1 flex flex-wrap gap-2 sm:mt-0">
-                                                    <Badge
-                                                        style={{
-                                                            backgroundColor:
-                                                                data.priority
-                                                                    .color,
-                                                        }}
-                                                        className="text-xs text-white"
-                                                    >
-                                                        {data.priority.name}
-                                                    </Badge>
-                                                    <Badge
-                                                        style={{
-                                                            backgroundColor:
-                                                                data.status
-                                                                    .color,
-                                                        }}
-                                                        className="text-xs text-white"
-                                                    >
-                                                        {data.status.name}
-                                                    </Badge>
-                                                </div>
+
+                                        <div className="flex justify-between">
+                                            {/* Task Name */}
+                                            <div
+                                                className="max-w-[150px] truncate text-sm font-semibold text-gray-200 sm:max-w-[300px] sm:text-base"
+                                                title={data.name} // show full name on hover
+                                            >
+                                                {data.name}
                                             </div>
-
-                                            <div className="flex items-center justify-between gap-2 text-xs text-gray-400">
-                                                <div className="flex items-center gap-1">
-                                                    {(() => {
-                                                        const dueDate =
-                                                            data?.due_date;
-                                                        const isOverdue =
-                                                            dueDate &&
-                                                            new Date(dueDate) <
-                                                                new Date();
-
-                                                        if (dueDate) {
-                                                            return (
-                                                                <div
-                                                                    className={`flex items-center gap-1 text-xs ${
-                                                                        isOverdue
-                                                                            ? 'text-red-400'
-                                                                            : 'text-gray-400'
-                                                                    }`}
-                                                                    title={
-                                                                        isOverdue
-                                                                            ? 'Overdue'
-                                                                            : 'Due Date'
-                                                                    }
-                                                                >
-                                                                    {isOverdue ? (
-                                                                        <AlertTriangle className="h-3 w-3" />
-                                                                    ) : (
-                                                                        <Clock className="h-3 w-3" />
-                                                                    )}
-                                                                    {new Date(
-                                                                        dueDate,
-                                                                    ).toLocaleDateString(
-                                                                        'en-US',
-                                                                        {
-                                                                            month: 'short',
-                                                                            day: 'numeric',
-                                                                        },
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        }
-
-                                                        return (
-                                                            <span className="text-gray-500">
-                                                                —
-                                                            </span>
-                                                        );
-                                                    })()}
-                                                </div>
-                                                <SubTaskDropDown
-                                                    subTask={data}
-                                                />
-                                            </div>
+                                            <SubTaskDropDown subTask={data} />
                                         </div>
 
+                                        <div className="flex items-center justify-between gap-1 text-xs text-gray-400">
+                                            <div className="mt-1 flex flex-wrap gap-2 sm:mt-0">
+                                                <Badge
+                                                    style={{
+                                                        backgroundColor:
+                                                            data.priority.color,
+                                                    }}
+                                                    className="text-xs text-white"
+                                                >
+                                                    {data.priority.name}
+                                                </Badge>
+                                                <Badge
+                                                    style={{
+                                                        backgroundColor:
+                                                            data.status.color,
+                                                    }}
+                                                    className="text-xs text-white"
+                                                >
+                                                    {data.status.name}
+                                                </Badge>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                {(() => {
+                                                    const dueDate =
+                                                        data?.due_date;
+                                                    const isOverdue =
+                                                        dueDate &&
+                                                        new Date(dueDate) <
+                                                            new Date();
+
+                                                    if (dueDate) {
+                                                        return (
+                                                            <div
+                                                                className={`flex items-center gap-1 text-xs ${
+                                                                    isOverdue
+                                                                        ? 'text-red-400'
+                                                                        : 'text-gray-400'
+                                                                }`}
+                                                                title={
+                                                                    isOverdue
+                                                                        ? 'Overdue'
+                                                                        : 'Due Date'
+                                                                }
+                                                            >
+                                                                {isOverdue ? (
+                                                                    <AlertTriangle className="h-3 w-3" />
+                                                                ) : (
+                                                                    <Clock className="h-3 w-3" />
+                                                                )}
+                                                                {new Date(
+                                                                    dueDate,
+                                                                ).toLocaleDateString(
+                                                                    'en-US',
+                                                                    {
+                                                                        month: 'short',
+                                                                        day: 'numeric',
+                                                                    },
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <span className="text-gray-500">
+                                                            —
+                                                        </span>
+                                                    );
+                                                })()}
+                                            </div>
+                                        </div>
                                         {/* Description */}
                                         {data.description && (
                                             <div className="text-xs text-gray-400 sm:text-sm">
