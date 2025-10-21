@@ -12,7 +12,8 @@ import {
 } from '@/components/ui/drawer';
 import { useInitials } from '@/hooks/use-initials';
 import { SubTaskInterface } from '@/types/subTask';
-import { Clock, WorkflowIcon } from 'lucide-react';
+import { AlertTriangle, Clock, WorkflowIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { SubTaskDropDown } from './subTaskDropDown';
 
 interface Props {
@@ -21,9 +22,23 @@ interface Props {
 
 export function Subtask({ subTask }: Props) {
     const initials = useInitials();
+    const [maxHeight, setMaxHeight] = useState<string>('100%');
+
+    // 🧮 Dynamically calculate available height
+    useEffect(() => {
+        const handleResize = () => {
+            const height = window.innerHeight - 160; // subtract header & margins
+            setMaxHeight(`${height}px`);
+        };
+
+        handleResize(); // initial run
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
-        <Drawer direction="bottom">
+        <Drawer direction="right">
             <DrawerTrigger asChild>
                 <DrawerTrigger className="ml-1 flex cursor-pointer items-center gap-1 text-sm transition-colors hover:text-primary">
                     <WorkflowIcon className="h-3.5 w-3.5" />
@@ -32,17 +47,19 @@ export function Subtask({ subTask }: Props) {
                 </DrawerTrigger>
             </DrawerTrigger>
 
-            <DrawerContent className="h-[70vh] overflow-hidden border-t border-muted bg-background shadow-lg">
-                <div className="mx-auto w-full max-w-5xl">
-                    <DrawerHeader>
-                        <DrawerTitle className="text-xl font-semibold">
+            <DrawerContent className="h-screen w-[700px] overflow-hidden">
+                <div className="scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent mx-auto h-full max-w-sm overflow-y-auto">
+                    {/* Header */}
+                    <DrawerHeader className="sticky top-0 z-10 border-muted bg-background px-4 sm:px-6">
+                        <DrawerTitle className="text-lg font-semibold sm:text-xl">
                             Subtask List
                         </DrawerTitle>
-                        <DrawerDescription>
+                        <DrawerDescription className="text-xs text-gray-400 sm:text-sm">
                             View and manage all subtasks for this task.
                         </DrawerDescription>
                     </DrawerHeader>
 
+                    {/* No subtasks */}
                     {subTask.length === 0 ? (
                         <div className="flex h-64 flex-col items-center justify-center text-center text-gray-500">
                             <WorkflowIcon className="mb-2 h-8 w-8 text-gray-400" />
@@ -52,15 +69,7 @@ export function Subtask({ subTask }: Props) {
                             </p>
                         </div>
                     ) : (
-                        <div
-                            className="space-y-3 overflow-y-auto px-4 pb-6"
-                            style={{
-                                maxHeight: 'calc(70vh - 120px)',
-                                scrollbarWidth: 'thin',
-                            }}
-                        >
-                            {/* Scrollbar styling for Chrome, Edge, Safari */}
-
+                        <div className="space-y-3 px-3 pb-6 transition-all sm:px-4 md:px-6">
                             {subTask.map((data, index) => {
                                 const dueDate = data?.due_date
                                     ? new Date(data.due_date)
@@ -69,15 +78,15 @@ export function Subtask({ subTask }: Props) {
                                 return (
                                     <div
                                         key={index}
-                                        className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-accent/30 p-4 shadow-sm transition-all hover:shadow-md"
+                                        className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-accent/30 p-3 shadow-sm transition-all hover:shadow-md sm:p-4"
                                     >
-                                        {/* Title */}
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex gap-2">
-                                                <div className="text-sm font-semibold text-gray-200">
+                                        {/* Title + Meta */}
+                                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+                                                <div className="text-sm font-semibold text-gray-200 sm:text-base">
                                                     {data.name}
                                                 </div>
-                                                <div className="flex flex-wrap gap-2">
+                                                <div className="mt-1 flex flex-wrap gap-2 sm:mt-0">
                                                     <Badge
                                                         style={{
                                                             backgroundColor:
@@ -100,18 +109,55 @@ export function Subtask({ subTask }: Props) {
                                                     </Badge>
                                                 </div>
                                             </div>
-                                            <div className="mt-2 flex items-center justify-between gap-2 text-xs text-gray-400">
+
+                                            <div className="flex items-center justify-between gap-2 text-xs text-gray-400">
                                                 <div className="flex items-center gap-1">
-                                                    <Clock className="h-3 w-3" />
-                                                    {dueDate
-                                                        ? dueDate.toLocaleDateString(
-                                                              'en-US',
-                                                              {
-                                                                  month: 'short',
-                                                                  day: 'numeric',
-                                                              },
-                                                          )
-                                                        : 'No due date'}
+                                                    {(() => {
+                                                        const dueDate =
+                                                            data?.due_date;
+                                                        const isOverdue =
+                                                            dueDate &&
+                                                            new Date(dueDate) <
+                                                                new Date();
+
+                                                        if (dueDate) {
+                                                            return (
+                                                                <div
+                                                                    className={`flex items-center gap-1 text-xs ${
+                                                                        isOverdue
+                                                                            ? 'text-red-400'
+                                                                            : 'text-gray-400'
+                                                                    }`}
+                                                                    title={
+                                                                        isOverdue
+                                                                            ? 'Overdue'
+                                                                            : 'Due Date'
+                                                                    }
+                                                                >
+                                                                    {isOverdue ? (
+                                                                        <AlertTriangle className="h-3 w-3" />
+                                                                    ) : (
+                                                                        <Clock className="h-3 w-3" />
+                                                                    )}
+                                                                    {new Date(
+                                                                        dueDate,
+                                                                    ).toLocaleDateString(
+                                                                        'en-US',
+                                                                        {
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                        },
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        }
+
+                                                        return (
+                                                            <span className="text-gray-500">
+                                                                —
+                                                            </span>
+                                                        );
+                                                    })()}
                                                 </div>
                                                 <SubTaskDropDown
                                                     subTask={data}
@@ -121,12 +167,10 @@ export function Subtask({ subTask }: Props) {
 
                                         {/* Description */}
                                         {data.description && (
-                                            <div className="text-xs text-gray-400">
+                                            <div className="text-xs text-gray-400 sm:text-sm">
                                                 {data.description}
                                             </div>
                                         )}
-
-                                        {/* Badges */}
 
                                         {/* Assignees */}
                                         <div className="mt-1 flex -space-x-2">
@@ -136,9 +180,9 @@ export function Subtask({ subTask }: Props) {
                                                     .map((user, i) => (
                                                         <Avatar
                                                             key={i}
-                                                            className="h-6 w-6 border-2 border-background shadow-sm"
+                                                            className="h-6 w-6 border-2 border-background shadow-sm sm:h-7 sm:w-7"
                                                         >
-                                                            <AvatarFallback className="bg-gray-700 text-[10px] font-semibold text-white">
+                                                            <AvatarFallback className="bg-gray-700 text-[10px] font-semibold text-white sm:text-xs">
                                                                 {initials(
                                                                     user.name,
                                                                 )}
@@ -151,7 +195,7 @@ export function Subtask({ subTask }: Props) {
                                                 </span>
                                             )}
                                             {(data.users?.length ?? 0) > 3 && (
-                                                <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-gray-700 text-[10px] font-semibold text-white">
+                                                <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-background bg-gray-700 text-[10px] font-semibold text-white sm:h-7 sm:w-7 sm:text-xs">
                                                     +
                                                     {(data.users?.length ?? 0) -
                                                         3}
