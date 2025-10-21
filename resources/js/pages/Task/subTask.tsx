@@ -1,74 +1,34 @@
 'use client';
 
-import { Minus, Plus, WorkflowIcon } from 'lucide-react';
-import * as React from 'react';
-import { Bar, BarChart, ResponsiveContainer } from 'recharts';
-
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
     DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
 } from '@/components/ui/drawer';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { useInitials } from '@/hooks/use-initials';
 import { SubTaskInterface } from '@/types/subTask';
-
-const data = [
-    {
-        goal: 400,
-    },
-    {
-        goal: 300,
-    },
-    {
-        goal: 200,
-    },
-    {
-        goal: 300,
-    },
-    {
-        goal: 200,
-    },
-    {
-        goal: 278,
-    },
-    {
-        goal: 189,
-    },
-    {
-        goal: 239,
-    },
-    {
-        goal: 300,
-    },
-    {
-        goal: 200,
-    },
-    {
-        goal: 278,
-    },
-    {
-        goal: 189,
-    },
-    {
-        goal: 349,
-    },
-];
+import { AlertTriangle, Clock, WorkflowIcon } from 'lucide-react';
+import { SubTaskDropDown } from './subTaskDropDown';
 
 interface Props {
     subTask: SubTaskInterface[];
 }
-export function DrawerDemo({ subTask }: Props) {
-    console.log(subTask);
-    const [goal, setGoal] = React.useState(350);
 
-    function onClick(adjustment: number) {
-        setGoal(Math.max(200, Math.min(400, goal + adjustment)));
-    }
+export function Subtask({ subTask }: Props) {
+    const initials = useInitials();
 
     return (
         <Drawer direction="bottom">
@@ -76,70 +36,154 @@ export function DrawerDemo({ subTask }: Props) {
                 <DrawerTrigger className="ml-1 flex cursor-pointer items-center gap-1">
                     <WorkflowIcon className="h-3.5 w-3.5" />
                     <div>{subTask.length}</div>
-                    <span>SubTask</span>
+                    <span>Subtask</span>
                 </DrawerTrigger>
             </DrawerTrigger>
-            <DrawerContent>
-                <div className="mx-auto w-full max-w-sm">
+            <DrawerContent className="h-[70vh] overflow-hidden">
+                <div className="mx-auto w-full max-w-6xl">
                     <DrawerHeader>
-                        <DrawerTitle>Move Goal</DrawerTitle>
+                        <DrawerTitle>Subtask List</DrawerTitle>
                         <DrawerDescription>
-                            Set your daily activity goal.
+                            View and manage all subtasks under this task. You
+                            can track their progress, update status, or assign
+                            members.
                         </DrawerDescription>
                     </DrawerHeader>
-                    <div className="p-4 pb-0">
-                        <div className="flex items-center justify-center space-x-2">
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8 shrink-0 rounded-full"
-                                onClick={() => onClick(-10)}
-                                disabled={goal <= 200}
-                            >
-                                <Minus />
-                                <span className="sr-only">Decrease</span>
-                            </Button>
-                            <div className="flex-1 text-center">
-                                <div className="text-7xl font-bold tracking-tighter">
-                                    {goal}
-                                </div>
-                                <div className="text-[0.70rem] text-muted-foreground uppercase">
-                                    Calories/day
-                                </div>
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8 shrink-0 rounded-full"
-                                onClick={() => onClick(10)}
-                                disabled={goal >= 400}
-                            >
-                                <Plus />
-                                <span className="sr-only">Increase</span>
-                            </Button>
+
+                    {subTask.length === 0 ? (
+                        <div className="flex h-64 flex-col items-center justify-center text-center text-gray-500">
+                            <WorkflowIcon className="mb-2 h-8 w-8 text-gray-400" />
+                            <p className="text-base font-medium">No Subtasks</p>
+                            <p className="text-sm text-gray-400">
+                                There are no subtasks available for this task
+                                yet.
+                            </p>
                         </div>
-                        <div className="mt-3 h-[120px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={data}>
-                                    <Bar
-                                        dataKey="goal"
-                                        style={
-                                            {
-                                                fill: 'hsl(var(--foreground))',
-                                                opacity: 0.9,
-                                            } as React.CSSProperties
-                                        }
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
+                    ) : (
+                        <div className="overflow-hidden rounded-lg border">
+                            <Table>
+                                <TableHeader className="sticky top-0 z-10 bg-muted">
+                                    <TableRow>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead>Priority</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Assignees</TableHead>
+                                        <TableHead>Due date</TableHead>
+                                        <TableHead></TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {subTask.map((data, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell className="font-medium">
+                                                {data.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    style={{
+                                                        backgroundColor:
+                                                            data.priority.color,
+                                                    }}
+                                                    className="text-white"
+                                                >
+                                                    {data.priority.name}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    style={{
+                                                        backgroundColor:
+                                                            data.status.color,
+                                                    }}
+                                                    className="text-white"
+                                                >
+                                                    {data.status.name}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="font-medium">
+                                                <div className="flex -space-x-2">
+                                                    {data.users &&
+                                                    data.users.length > 0 ? (
+                                                        data.users.map(
+                                                            (user, index) => (
+                                                                <Avatar
+                                                                    key={index}
+                                                                    className="h-8 w-8 border-2 border-background"
+                                                                >
+                                                                    <AvatarFallback className="bg-gray-700 text-xs font-semibold">
+                                                                        {initials(
+                                                                            user.name,
+                                                                        )}
+                                                                    </AvatarFallback>
+                                                                </Avatar>
+                                                            ),
+                                                        )
+                                                    ) : (
+                                                        <span>N/A</span>
+                                                    )}
+                                                </div>
+                                            </TableCell>
+
+                                            <TableCell>
+                                                {(() => {
+                                                    const dueDate =
+                                                        data?.due_date;
+                                                    const isOverdue =
+                                                        dueDate &&
+                                                        new Date(dueDate) <
+                                                            new Date();
+
+                                                    if (dueDate) {
+                                                        return (
+                                                            <div
+                                                                className={`flex items-center gap-1 text-xs ${
+                                                                    isOverdue
+                                                                        ? 'text-red-400'
+                                                                        : 'text-gray-400'
+                                                                }`}
+                                                                title={
+                                                                    isOverdue
+                                                                        ? 'Overdue'
+                                                                        : 'Due Date'
+                                                                }
+                                                            >
+                                                                {isOverdue ? (
+                                                                    <AlertTriangle className="h-3 w-3" />
+                                                                ) : (
+                                                                    <Clock className="h-3 w-3" />
+                                                                )}
+                                                                {new Date(
+                                                                    dueDate,
+                                                                ).toLocaleDateString(
+                                                                    'en-US',
+                                                                    {
+                                                                        month: 'short',
+                                                                        day: 'numeric',
+                                                                    },
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <span className="text-gray-500">
+                                                            —
+                                                        </span>
+                                                    );
+                                                })()}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <SubTaskDropDown
+                                                    subTask={data}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </div>
-                    </div>
-                    <DrawerFooter>
-                        <Button>Submit</Button>
-                        <DrawerClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                        </DrawerClose>
-                    </DrawerFooter>
+                    )}
                 </div>
             </DrawerContent>
         </Drawer>

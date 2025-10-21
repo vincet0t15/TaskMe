@@ -19,7 +19,7 @@ import { useState } from 'react';
 import { CreateTaskDialog } from '../Task/create';
 import { CreateSubTaskDialog } from '../Task/createSubTask';
 import { EditTaskDialog } from '../Task/edit';
-import { DrawerDemo } from '../Task/subTask';
+import { Subtask } from '../Task/subTask';
 import { TaskDropDown } from '../Task/taskDropDown';
 import ListLayout from './ListLayout';
 interface Props {
@@ -28,6 +28,7 @@ interface Props {
 }
 
 export default function Kanban({ list, tasks }: Props) {
+    console.log(tasks);
     const getInitials = useInitials();
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -43,26 +44,6 @@ export default function Kanban({ list, tasks }: Props) {
             href: dashboard().url,
         },
     ];
-    const formatDate = (d?: string | null) => {
-        if (!d) return '—';
-        try {
-            return new Date(d).toLocaleDateString('en-US', {
-                month: 'short',
-                day: '2-digit',
-                year: 'numeric',
-            });
-        } catch {
-            return '—';
-        }
-    };
-
-    const isOverdue = (d?: string | null) => {
-        if (!d) return false;
-        const due = new Date(d).getTime();
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return due < today.getTime();
-    };
 
     const getTransparentColor = (hex: string, opacity = 0.15) => {
         if (!hex.startsWith('#')) return hex;
@@ -85,17 +66,6 @@ export default function Kanban({ list, tasks }: Props) {
         setOpenCreateTask(true);
         setStatusId(status.id);
     };
-    function getRandomDarkColor(seed: string) {
-        let hash = 0;
-        for (let i = 0; i < seed.length; i++) {
-            hash = seed.charCodeAt(i) + ((hash << 5) - hash);
-        }
-
-        const hue = hash % 360;
-        const saturation = 65 + Math.abs(hash % 20);
-        const lightness = 35 + Math.abs(hash % 10);
-        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-    }
 
     const handleClickCreateSubTask = (task: TaskInterface) => {
         setOpenCreateSubtask(true);
@@ -267,7 +237,7 @@ export default function Kanban({ list, tasks }: Props) {
                                                     </div>
 
                                                     <div>
-                                                        <DrawerDemo
+                                                        <Subtask
                                                             subTask={
                                                                 task.sub_tasks
                                                             }

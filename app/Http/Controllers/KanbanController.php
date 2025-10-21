@@ -14,7 +14,9 @@ class KanbanController extends Controller
         $tasks = Status::with([
             'tasks' => function ($query) use ($list) {
                 $query->where('list_task_id', $list->id)
-                    ->with(['priority', 'status', 'users', 'subTasks']);
+                    ->with(['priority', 'status', 'users', 'subTasks' => function ($query) {
+                        $query->with('users', 'priority', 'status');
+                    }]);
             }
         ])
             ->whereHas('tasks', function ($query) use ($list) {

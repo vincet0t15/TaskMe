@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // SUBTASK
     Route::post('subtasks', [SubTaskController::class, 'store'])->name('subtask.store');
+    Route::put('subtasks/{subTask}', [SubTaskController::class, 'update'])->name('subtask.update');
 });
 
 require __DIR__ . '/settings.php';
