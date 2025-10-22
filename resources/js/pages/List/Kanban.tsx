@@ -20,7 +20,7 @@ import {
     Plus,
     UserCircle2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateTaskDialog } from '../Task/create';
 import { EditTaskDialog } from '../Task/edit';
 import { TaskShow } from '../Task/show';
@@ -81,6 +81,23 @@ export default function Kanban({ list, tasks }: Props) {
         setOpenShow(true);
     };
 
+    // const handleTest = () => {
+    //     router.visit(window.location.pathname, {
+    //         only: ['tasks'],
+    //         preserveScroll: true,
+    //         preserveState: true,
+    //     });
+
+    //     console.log(tasks);
+    // };
+    useEffect(() => {
+        if (task && tasks) {
+            const updated = tasks
+                .flatMap((status) => status.tasks)
+                .find((t) => t.id === task.id);
+            if (updated) setTask(updated);
+        }
+    }, [tasks]);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <ListLayout list={list}>

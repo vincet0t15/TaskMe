@@ -31,6 +31,7 @@ export function TaskShow({ open, setOpen, task }: Props) {
         setSubTask({ subTask });
         setOpenEditSubTaskDialog(true);
     };
+
     return (
         <Drawer open={open} onOpenChange={setOpen} direction="right">
             <DrawerContent className="flex h-screen w-full max-w-sm flex-col bg-sidebar">
