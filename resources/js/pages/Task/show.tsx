@@ -11,24 +11,10 @@ import {
 } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useInitials } from '@/hooks/use-initials';
+import { SubTaskInterface } from '@/types/subTask';
 import { TaskInterface } from '@/types/task';
-import * as React from 'react';
-
-const data = [
-    { goal: 400 },
-    { goal: 300 },
-    { goal: 200 },
-    { goal: 300 },
-    { goal: 200 },
-    { goal: 278 },
-    { goal: 189 },
-    { goal: 239 },
-    { goal: 300 },
-    { goal: 200 },
-    { goal: 278 },
-    { goal: 189 },
-    { goal: 349 },
-];
+import { useState } from 'react';
+import { EditSubTaskDialog } from './subTask/editSubtask';
 
 interface Props {
     open: boolean;
@@ -37,12 +23,14 @@ interface Props {
 }
 
 export function TaskShow({ open, setOpen, task }: Props) {
-    const [goal, setGoal] = React.useState(350);
     const initials = useInitials();
-    function onClick(adjustment: number) {
-        setGoal(Math.max(200, Math.min(400, goal + adjustment)));
-    }
+    const [openEditSubTaskDialog, setOpenEditSubTaskDialog] = useState(false);
+    const [subTask, setSubTask] = useState<{ subTask: SubTaskInterface }>();
 
+    const handleClickSubTask = (subTask: SubTaskInterface) => {
+        setSubTask({ subTask });
+        setOpenEditSubTaskDialog(true);
+    };
     return (
         <Drawer open={open} onOpenChange={setOpen} direction="right">
             <DrawerContent className="flex h-screen w-full max-w-sm flex-col bg-sidebar">
@@ -179,7 +167,10 @@ export function TaskShow({ open, setOpen, task }: Props) {
                                     task.sub_tasks.map((subtask, index) => (
                                         <div
                                             key={index}
-                                            className="mt-2 flex items-center justify-between rounded-lg border border-border bg-muted/40 px-3 py-2 transition-colors hover:bg-muted/60"
+                                            className="mt-2 flex cursor-pointer items-center justify-between rounded-lg border border-border bg-muted/40 px-3 py-2 transition-colors hover:bg-muted/60"
+                                            onClick={() =>
+                                                handleClickSubTask(subtask)
+                                            }
                                         >
                                             <div className="flex items-center space-x-2">
                                                 {/* Status dot */}
@@ -218,7 +209,13 @@ export function TaskShow({ open, setOpen, task }: Props) {
                         </div>
                     </ScrollArea>
                 </div>
-
+                {openEditSubTaskDialog && subTask && (
+                    <EditSubTaskDialog
+                        open={openEditSubTaskDialog}
+                        setOpen={setOpenEditSubTaskDialog}
+                        subTasks={subTask.subTask}
+                    />
+                )}
                 {/* Footer pinned to bottom */}
                 {/* <DrawerFooter className="border-t bg-sidebar">
                     <Button className="w-full">Submit</Button>

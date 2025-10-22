@@ -124,16 +124,13 @@ export default function Kanban({ list, tasks }: Props) {
                                                 className="group cursor-pointer rounded-xl border border-slate-500 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700"
                                             >
                                                 {/* Header section — Priority + Task name */}
-                                                <div>
+                                                <div
+                                                    onClick={() =>
+                                                        handleClickName(task)
+                                                    }
+                                                >
                                                     <div className="mb-2 flex items-center justify-between">
-                                                        <span
-                                                            className="truncate text-sm font-semibold text-slate-300"
-                                                            onClick={() =>
-                                                                handleClickName(
-                                                                    task,
-                                                                )
-                                                            }
-                                                        >
+                                                        <span className="truncate text-sm font-semibold text-slate-300">
                                                             {task.name}
                                                         </span>
                                                         <div className="flex items-center justify-center gap-2">
