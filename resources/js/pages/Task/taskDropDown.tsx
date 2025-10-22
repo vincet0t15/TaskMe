@@ -26,27 +26,31 @@ export function TaskDropDown({
                 </button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-56 bg-sidebar" align="start">
+            <DropdownMenuContent
+                className="w-56 bg-sidebar"
+                align="start"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <DropdownMenuItem
                     onClick={() => onEdit(task)}
-                    className="cursor-pointer"
+                    className="cursor-pointer justify-between"
                 >
+                    Manage
                     <PenIcon className="mr-2 h-4 w-4" />
-                    Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={() => onCreateSubTask(task)}
-                    className="cursor-pointer"
+                    className="cursor-pointer justify-between"
                 >
-                    <PlusIcon className="mr-2 h-4 w-4" />
                     Add subtask
+                    <PlusIcon className="mr-2 h-4 w-4" />
                 </DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={() => onDelete(task)}
-                    className="cursor-pointer text-orange-500 focus:text-orange-500"
+                    className="cursor-pointer justify-between text-orange-500 focus:text-orange-500"
                 >
-                    <Trash2 className="mr-2 h-4 w-4" />
                     Delete
+                    <Trash2 className="mr-2 h-4 w-4 text-orange-500" />
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

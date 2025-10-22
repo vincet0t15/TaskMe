@@ -1,4 +1,10 @@
 import { Badge } from '@/components/ui/badge';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import spaces from '@/routes/spaces';
@@ -121,16 +127,19 @@ export default function Kanban({ list, tasks }: Props) {
                                         {status.tasks.map((task) => (
                                             <div
                                                 key={task.id}
-                                                className="group cursor-pointer rounded-xl border border-slate-500 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700"
+                                                className="group rounded-xl border border-slate-500 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700"
                                             >
                                                 {/* Header section — Priority + Task name */}
-                                                <div
-                                                    onClick={() =>
-                                                        handleClickName(task)
-                                                    }
-                                                >
+                                                <div>
                                                     <div className="mb-2 flex items-center justify-between">
-                                                        <span className="truncate text-sm font-semibold text-slate-300">
+                                                        <span
+                                                            className="cursor-pointer truncate text-sm font-semibold text-slate-300 hover:font-bold"
+                                                            onClick={() =>
+                                                                handleClickName(
+                                                                    task,
+                                                                )
+                                                            }
+                                                        >
                                                             {task.name}
                                                         </span>
                                                         <div className="flex items-center justify-center gap-2">
@@ -196,60 +205,45 @@ export default function Kanban({ list, tasks }: Props) {
                                                     </div>
 
                                                     {/* Users (Avatars) */}
-                                                    <div className="flex items-center gap-1">
-                                                        <UserCircle2 className="h-4.5 w-4.5 text-slate-400" />
-                                                        {task.users?.length}
-                                                        {/* {(task.users
-                                                                        ?.length ??
-                                                                        0) >
-                                                                    0 ? (
-                                                                        <>
-                                                                            {(
-                                                                                task.users ??
-                                                                                []
-                                                                            )
-                                                                                .slice(
-                                                                                    0,
-                                                                                    2,
-                                                                                ) // ✅ show only first 3 users
-                                                                                .map(
-                                                                                    (
-                                                                                        user,
-                                                                                        index,
-                                                                                    ) => (
-                                                                                        <Avatar
-                                                                                            key={
-                                                                                                index
-                                                                                            }
-                                                                                            className="h-5 w-5"
-                                                                                        >
-                                                                                            <AvatarFallback className="rounded-full border border-slate-800 bg-slate-700 text-xs font-semibold text-white">
-                                                                                                {getInitials(
-                                                                                                    user.name,
-                                                                                                )}
-                                                                                            </AvatarFallback>
-                                                                                        </Avatar>
-                                                                                    ),
-                                                                                )}
 
-                                                                            {(task
+                                                    <div className="flex items-center gap-1">
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger
+                                                                    asChild
+                                                                >
+                                                                    <div className="flex cursor-default items-center gap-1">
+                                                                        <UserCircle2 className="h-4.5 w-4.5 text-slate-400" />
+                                                                        <span>
+                                                                            {task
                                                                                 .users
                                                                                 ?.length ??
-                                                                                0) >
-                                                                                2 && (
-                                                                                <div className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-900 bg-slate-700 text-[10px] font-semibold text-white">
-                                                                                    +
-                                                                                    {(task
-                                                                                        .users
-                                                                                        ?.length ??
-                                                                                        0) -
-                                                                                        2}
-                                                                                </div>
-                                                                            )}
-                                                                        </>
-                                                                    ) : (
-                                                                        <UserCircle2 className="h-5 w-5 text-slate-400" />
-                                                                    )} */}
+                                                                                0}
+                                                                        </span>
+                                                                    </div>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent
+                                                                    side="top"
+                                                                    className="text-xs"
+                                                                >
+                                                                    {task.users &&
+                                                                    task.users
+                                                                        .length >
+                                                                        0
+                                                                        ? task.users
+                                                                              .map(
+                                                                                  (
+                                                                                      user,
+                                                                                  ) =>
+                                                                                      user.name,
+                                                                              )
+                                                                              .join(
+                                                                                  ', ',
+                                                                              )
+                                                                        : 'No users assigned'}
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
                                                     </div>
 
                                                     <div>

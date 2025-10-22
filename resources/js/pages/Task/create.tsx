@@ -116,6 +116,7 @@ export function CreateTaskDialog({ open, setOpen, statusId }: Props) {
                                 name="name"
                                 value={data.name}
                                 onChange={handleChangeInput}
+                                placeholder="Subtask name"
                             />
                             <InputError message={errors.name} />
                         </div>
@@ -125,6 +126,7 @@ export function CreateTaskDialog({ open, setOpen, statusId }: Props) {
                                 name="description"
                                 value={data.description}
                                 onChange={handleChangeInput}
+                                placeholder="Description"
                             />
                         </div>
                     </div>
