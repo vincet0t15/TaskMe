@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest\TaskStoreRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TaskController extends Controller
 {
@@ -57,5 +58,12 @@ class TaskController extends Controller
         }
 
         return back()->withSuccess('Task updated successfully');
+    }
+
+    public function show(Task $task)
+    {
+        return Inertia::render('Task/show', [
+            'task' => $task,
+        ]);
     }
 }

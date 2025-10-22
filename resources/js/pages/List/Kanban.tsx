@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/badge';
-import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import spaces from '@/routes/spaces';
@@ -18,6 +17,7 @@ import {
 import { useState } from 'react';
 import { CreateTaskDialog } from '../Task/create';
 import { EditTaskDialog } from '../Task/edit';
+import { TaskShow } from '../Task/show';
 import { CreateSubTaskDialog } from '../Task/subTask/createSubTask';
 import { Subtask } from '../Task/subTask/subTask';
 import { TaskDropDown } from '../Task/taskDropDown';
@@ -28,8 +28,6 @@ interface Props {
 }
 
 export default function Kanban({ list, tasks }: Props) {
-    console.log(tasks);
-    const getInitials = useInitials();
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
@@ -60,7 +58,7 @@ export default function Kanban({ list, tasks }: Props) {
     const [deleteTask, setDeleteTask] = useState(Number);
     const [openCreateSubTask, setOpenCreateSubtask] = useState(false);
     const [task, setTask] = useState<TaskInterface | null>(null);
-
+    const [openShow, setOpenShow] = useState(false);
     const [statusId, setStatusId] = useState(Number);
     const handleClickAddTask = (status: StatusInterface) => {
         setOpenCreateTask(true);
@@ -70,6 +68,11 @@ export default function Kanban({ list, tasks }: Props) {
     const handleClickCreateSubTask = (task: TaskInterface) => {
         setOpenCreateSubtask(true);
         setTask(task);
+    };
+
+    const handleClickName = (task: TaskInterface) => {
+        setTask(task);
+        setOpenShow(true);
     };
 
     return (
@@ -121,53 +124,69 @@ export default function Kanban({ list, tasks }: Props) {
                                                 className="group cursor-pointer rounded-xl border border-slate-500 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700"
                                             >
                                                 {/* Header section — Priority + Task name */}
-                                                <div className="mb-2 flex items-center justify-between">
-                                                    <span className="truncate text-sm font-semibold text-slate-300">
-                                                        {task.name}
-                                                    </span>
-                                                    <div className="flex items-center justify-center gap-2">
-                                                        <Badge
-                                                            className="text-white"
-                                                            style={{
-                                                                backgroundColor:
+                                                <div>
+                                                    <div className="mb-2 flex items-center justify-between">
+                                                        <span
+                                                            className="truncate text-sm font-semibold text-slate-300"
+                                                            onClick={() =>
+                                                                handleClickName(
+                                                                    task,
+                                                                )
+                                                            }
+                                                        >
+                                                            {task.name}
+                                                        </span>
+                                                        <div className="flex items-center justify-center gap-2">
+                                                            <Badge
+                                                                className="text-white"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        task
+                                                                            .priority
+                                                                            .color,
+                                                                }}
+                                                            >
+                                                                {
                                                                     task
                                                                         .priority
-                                                                        .color,
-                                                            }}
-                                                        >
-                                                            {task.priority.name}
-                                                        </Badge>
-                                                        <TaskDropDown
-                                                            task={task}
-                                                            onEdit={(task) => {
-                                                                setEditTask(
+                                                                        .name
+                                                                }
+                                                            </Badge>
+                                                            <TaskDropDown
+                                                                task={task}
+                                                                onEdit={(
                                                                     task,
-                                                                );
-                                                                setOpenEditTask(
-                                                                    true,
-                                                                );
-                                                            }}
-                                                            onDelete={(task) =>
-                                                                setDeleteTask(
-                                                                    task.id,
-                                                                )
-                                                            }
-                                                            onCreateSubTask={(
-                                                                task,
-                                                            ) =>
-                                                                handleClickCreateSubTask(
+                                                                ) => {
+                                                                    setEditTask(
+                                                                        task,
+                                                                    );
+                                                                    setOpenEditTask(
+                                                                        true,
+                                                                    );
+                                                                }}
+                                                                onDelete={(
                                                                     task,
-                                                                )
-                                                            }
-                                                        />
+                                                                ) =>
+                                                                    setDeleteTask(
+                                                                        task.id,
+                                                                    )
+                                                                }
+                                                                onCreateSubTask={(
+                                                                    task,
+                                                                ) =>
+                                                                    handleClickCreateSubTask(
+                                                                        task,
+                                                                    )
+                                                                }
+                                                            />
+                                                        </div>
                                                     </div>
+                                                    <p className="mb-3 line-clamp-2 text-sm leading-snug text-slate-100/90">
+                                                        {task.description ||
+                                                            'No description provided.'}
+                                                    </p>
                                                 </div>
-
                                                 {/* Description */}
-                                                <p className="mb-3 line-clamp-2 text-sm leading-snug text-slate-100/90">
-                                                    {task.description ||
-                                                        'No description provided.'}
-                                                </p>
 
                                                 {/* Footer */}
                                                 <div className="flex items-center justify-between border-t border-slate-500/40 pt-2 text-xs text-slate-400">
@@ -322,6 +341,14 @@ export default function Kanban({ list, tasks }: Props) {
                     <CreateSubTaskDialog
                         open={openCreateSubTask}
                         setOpen={setOpenCreateSubtask}
+                        task={task}
+                    />
+                )}
+
+                {openShow && task && (
+                    <TaskShow
+                        open={openShow}
+                        setOpen={setOpenShow}
                         task={task}
                     />
                 )}
