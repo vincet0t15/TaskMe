@@ -141,3 +141,35 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* 🌙 Dark mode FullCalendar popover */
+.dark .fc-popover {
+  background-color: #1f2937 !important; /* gray-800 */
+  border-color: #374151 !important; /* gray-700 */
+  color: #f9fafb !important; /* gray-100 */
+}
+
+/* Header area of popover (date and close button) */
+.dark .fc-popover-header {
+  background-color: #111827 !important; /* gray-900 */
+  color: #f9fafb !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+/* Event items inside the popover */
+.dark .fc-popover-body .fc-event {
+  background-color: #16a34a !important; /* example green or keep per-event color */
+  border: none !important;
+  color: #f9fafb !important;
+}
+
+@layer base {
+  .dark .fc-popover {
+    @apply bg-gray-800 border-gray-700 text-gray-100;
+  }
+  .dark .fc-popover-header {
+    @apply bg-gray-900 text-gray-100 border-b border-gray-700;
+  }
+}
+
+

@@ -83,8 +83,6 @@ export default function TableList({ list, tasks }: Props) {
                         expandRows={true}
                         dayMaxEvents={true}
                         eventClick={handleEventClick}
-                        // eventContent={renderEventContent}
-                        // height="auto"
                     />
                 </div>
             </ListLayout>
