@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest\TaskStoreRequest;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -72,7 +73,9 @@ class TaskController extends Controller
         $taskDetails = Task::with([
             'priority',
             'status',
-            'subTasks',
+            'subTasks' => function ($query) {
+                $query->with(['priority', 'status', 'users']);
+            }
         ])
             ->withCount([
                 'subTasks as completed_subtasks_count' => function ($query) {
@@ -82,6 +85,10 @@ class TaskController extends Controller
             ])
             ->findOrFail($task->id);
 
+        // Load users who have subtasks for this task
+        $taskDetails->userHasSubTask = User::whereHas('subTasks', function ($query) use ($task) {
+            $query->where('task_id', $task->id);
+        })->get();
 
         // Ensure subTasks relationship exists
         $totalSubtasks = $taskDetails->subTasks ? $taskDetails->subTasks->count() : 0;

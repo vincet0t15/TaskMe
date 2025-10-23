@@ -360,7 +360,12 @@ export default function TaskDetails({ task }: Props) {
                                 <div className="flex items-center justify-between text-base font-semibold">
                                     <span>Overall Task Completion</span>
                                     <span className="text-lg font-extrabold text-green-600 dark:text-green-400">
-                                        {progressPercentage.toFixed(0)}%
+                                        {task.progress_percentage
+                                            ? task.progress_percentage.toFixed(
+                                                  2,
+                                              )
+                                            : 0}
+                                        %
                                     </span>
                                 </div>
                                 <Progress
