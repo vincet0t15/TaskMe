@@ -73,7 +73,7 @@ class TaskController extends Controller
         $taskDetails = Task::with([
             'users' => function ($query) use ($task) {
                 $query->with('subTasks', function ($q) use ($task) {
-                    $q->where('task_id', $task->id); // only subtasks under this task
+                    $q->where('task_id', $task->id);
                 })
                     ->with(['subTasks' => function ($q) use ($task) {
                         $q->where('task_id', $task->id)
@@ -82,7 +82,7 @@ class TaskController extends Controller
                     ->withCount([
                         'subTasks as completed_subtasks_count' => function ($q) use ($task) {
                             $q->where('task_id', $task->id)
-                                ->where('status_id', 4); // completed only
+                                ->where('status_id', 4);
                         },
                         'subTasks as total_subtasks' => function ($q) use ($task) {
                             $q->where('task_id', $task->id);

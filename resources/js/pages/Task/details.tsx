@@ -61,25 +61,6 @@ export default function TaskDetails({ task }: Props) {
                                     </button>
                                 )}
                             </div>
-                            <div className="mt-8 flex flex-wrap items-center gap-4">
-                                {/* Due Date */}
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm font-medium text-gray-400">
-                                        Due:
-                                    </span>
-                                    <p className="text-base font-semibold text-white">
-                                        {task.due_date
-                                            ? new Date(
-                                                  task.due_date,
-                                              ).toLocaleDateString('en-US', {
-                                                  month: 'short',
-                                                  day: 'numeric',
-                                                  year: 'numeric',
-                                              })
-                                            : 'No due date'}
-                                    </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
 

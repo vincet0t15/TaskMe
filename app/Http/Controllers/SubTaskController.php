@@ -33,6 +33,7 @@ class SubTaskController extends Controller
     public function update(Request $request, SubTask $subTask)
     {
 
+
         $subTask->update([
             'name' => $request->name,
             'task_id' => $request->task_id,
@@ -63,6 +64,7 @@ class SubTaskController extends Controller
 
     public function destroy(SubTask $subTask)
     {
+        dd(1);
         $subTask->delete();
 
         return redirect()->back()->with('success', 'Subtask deleted successfully.');

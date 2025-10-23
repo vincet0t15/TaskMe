@@ -119,6 +119,7 @@ export function EditSubTaskDialog({ open, setOpen, subTasks }: Props) {
                                 value={data.name}
                                 onChange={handleChangeInput}
                             />
+
                             <InputError message={errors.name} />
                         </div>
                         <div className="grid gap-3">

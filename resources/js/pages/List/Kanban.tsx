@@ -18,7 +18,6 @@ import {
     AlertTriangle,
     Clock,
     MessageCircle,
-    MoreVerticalIcon,
     Plus,
     UserCircle2,
 } from 'lucide-react';
@@ -135,9 +134,6 @@ export default function Kanban({ list, tasks }: Props) {
                                                 }
                                             >
                                                 <Plus className="h-4 w-4" />
-                                            </button>
-                                            <button className="p-1 text-slate-300 transition-colors hover:text-white">
-                                                <MoreVerticalIcon className="h-4 w-4" />
                                             </button>
                                         </div>
                                     </div>

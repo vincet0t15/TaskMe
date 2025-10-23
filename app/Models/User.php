@@ -52,7 +52,8 @@ class User extends Authenticatable
     public function subTasks()
     {
         return $this->belongsToMany(SubTask::class, 'sub_task_assignees', 'user_id', 'sub_task_id')
+            ->whereNull('sub_task_assignees.deleted_at')
             ->withTimestamps()
-            ->withPivot('deleted_at');
+        ;
     }
 }
