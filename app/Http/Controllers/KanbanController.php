@@ -19,9 +19,7 @@ class KanbanController extends Controller
                     }]);
             }
         ])
-            ->whereHas('tasks', function ($query) use ($list) {
-                $query->where('list_task_id', $list->id);
-            })
+
             ->get();
 
         return Inertia::render('List/Kanban', [

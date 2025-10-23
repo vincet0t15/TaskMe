@@ -25,4 +25,8 @@ export interface TaskInterface {
     status: StatusInterface;
     users?: User[];
     sub_tasks: SubTaskInterface[];
+    completed_subtasks_count?: number;
+    progress_percentage?: number;
+    userHasSubTask?: User[];
+    assignees_count?: number;
 }

@@ -128,6 +128,7 @@ export function EditTaskDialog({ open, setOpen, taskEdit }: Props) {
                         <div className="grid gap-3">
                             <Label>Description</Label>
                             <Textarea
+                                className="max-h-[200px] min-h-[80px] resize-y overflow-auto"
                                 name="description"
                                 value={data.description}
                                 onChange={handleChangeInput}

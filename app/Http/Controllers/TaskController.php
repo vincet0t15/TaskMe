@@ -66,4 +66,36 @@ class TaskController extends Controller
             'task' => $task,
         ]);
     }
+
+    public function details(Task $task)
+    {
+        $taskDetails = Task::with([
+            'priority',
+            'status',
+            // 'usersWithSubTasks',
+            'subTasks',
+        ])
+            ->withCount([
+                'subTasks as completed_subtasks_count' => function ($query) {
+                    $query->where('status_id', 4);
+                },
+                'users as assignees_count'
+            ])
+            ->findOrFail($task->id);
+
+
+        // Ensure subTasks relationship exists
+        $totalSubtasks = $taskDetails->subTasks ? $taskDetails->subTasks->count() : 0;
+        $completedSubtasks = $taskDetails->completed_subtasks_count;
+
+        $progressPercentage = $totalSubtasks > 0
+            ? ($completedSubtasks / $totalSubtasks) * 100
+            : 0;
+
+        $taskDetails->progress_percentage = $progressPercentage;
+
+        return Inertia::render('Task/details', [
+            'task' => $taskDetails,
+        ]);
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SpaceController;
 use App\Http\Controllers\SubTaskController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TestController;
 use App\Models\ListTask;
 use App\Models\Space;
 use Illuminate\Support\Facades\Route;
@@ -38,7 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // TASK
     Route::post('tasks', [TaskController::class, 'store'])->name('task.store');
     Route::put('tasks/{task}', [TaskController::class, 'update'])->name('task.update');
-    Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
+    Route::get('tasks/{task}', [TaskController::class, 'details'])->name('details.show');
     // Calendar
     Route::get('calendar/{list}', [CalendarController::class, 'show'])->name('calendar.show');
 
@@ -49,6 +50,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('subtasks', [SubTaskController::class, 'store'])->name('subtask.store');
     Route::put('subtasks/{subTask}', [SubTaskController::class, 'update'])->name('subtask.update');
     Route::delete('subtasks/{subTask}', [SubTaskController::class, 'destroy'])->name('subtask.destroy');
+
+
+    // DETAILS
+    Route::get('task-details', [TestController::class, 'details'])->name('task.details');
 });
 
 require __DIR__ . '/settings.php';

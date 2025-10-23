@@ -48,4 +48,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function subTasks()
+    {
+        return $this->belongsToMany(SubTask::class, 'sub_task_assignees', 'user_id', 'sub_task_id')
+            ->withTimestamps()
+            ->withPivot('deleted_at');
+    }
 }

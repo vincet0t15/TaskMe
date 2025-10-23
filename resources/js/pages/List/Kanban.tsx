@@ -1,3 +1,4 @@
+import TaskController from '@/actions/App/Http/Controllers/TaskController';
 import { Badge } from '@/components/ui/badge';
 import {
     Tooltip,
@@ -12,6 +13,7 @@ import { BreadcrumbItem } from '@/types';
 import { ListInterface } from '@/types/List';
 import { StatusInterface } from '@/types/statuses';
 import { TaskInterface } from '@/types/task';
+import { router } from '@inertiajs/react';
 import {
     AlertTriangle,
     Clock,
@@ -34,6 +36,7 @@ interface Props {
 }
 
 export default function Kanban({ list, tasks }: Props) {
+    console.log(tasks);
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
@@ -152,8 +155,10 @@ export default function Kanban({ list, tasks }: Props) {
                                                         <span
                                                             className="cursor-pointer truncate text-sm font-semibold text-slate-300 hover:font-bold"
                                                             onClick={() =>
-                                                                handleClickName(
-                                                                    task,
+                                                                router.get(
+                                                                    TaskController.details.url(
+                                                                        task.id,
+                                                                    ),
                                                                 )
                                                             }
                                                         >

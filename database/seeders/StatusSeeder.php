@@ -16,10 +16,9 @@ class StatusSeeder extends Seeder
         $statuses = [
             ['name' => 'To Do',       'color' => '#3b82f6'], // Blue
             ['name' => 'In Progress', 'color' => '#f59e0b'], // Amber
-            ['name' => 'Blocked',     'color' => '#ef4444'], // Red
             ['name' => 'In Review',   'color' => '#8b5cf6'], // Purple
             ['name' => 'Completed',   'color' => '#10b981'], // Green
-            ['name' => 'Cancelled',   'color' => '#9ca3af'], // Light Gray
+
         ];
 
 

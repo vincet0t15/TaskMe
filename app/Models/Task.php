@@ -47,4 +47,18 @@ class Task extends Model
     {
         return $this->hasMany(SubTask::class, 'task_id');
     }
+
+    public function usersWithSubTasks()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            SubTask::class,
+            'task_id',        // Foreign key on sub_tasks table
+            'id',             // Foreign key on users table (used in pivot)
+            'id',             // Local key on tasks table
+            'id'              // Local key on sub_tasks table
+        )->whereHas('subTasks', function ($query) {
+            $query->whereColumn('sub_tasks.task_id', 'tasks.id');
+        });
+    }
 }
