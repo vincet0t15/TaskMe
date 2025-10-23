@@ -72,7 +72,6 @@ class TaskController extends Controller
         $taskDetails = Task::with([
             'priority',
             'status',
-            // 'usersWithSubTasks',
             'subTasks',
         ])
             ->withCount([
