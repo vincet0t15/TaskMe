@@ -81,14 +81,32 @@ class TaskController extends Controller
                 'subTasks as completed_subtasks_count' => function ($query) {
                     $query->where('status_id', 4);
                 },
+                'subTasks as total_subtasks',
                 'users as assignees_count'
             ])
             ->findOrFail($task->id);
 
         // Load users who have subtasks for this task
-        $taskDetails->userHasSubTask = User::whereHas('subTasks', function ($query) use ($task) {
+        $usersWithSubTasks = User::whereHas('subTasks', function ($query) use ($task) {
             $query->where('task_id', $task->id);
         })->get();
+
+        // Add total subtask and completed subtask counts for each user
+        foreach ($usersWithSubTasks as $user) {
+            $userSubTasks = $user->subTasks->filter(function ($subTask) use ($task) {
+                return $subTask->task_id === $task->id;
+            });
+
+            $totalSubTasks = $userSubTasks->count();
+            $completedSubTasks = $userSubTasks->filter(function ($subTask) {
+                return $subTask->status_id === 4; // Assuming 4 is completed status_id
+            })->count();
+
+            $user->total_subtasks = $totalSubTasks;
+            $user->completed_subtasks = $completedSubTasks;
+        }
+
+        $taskDetails->userHasSubTask = $usersWithSubTasks;
 
         // Ensure subTasks relationship exists
         $totalSubtasks = $taskDetails->subTasks ? $taskDetails->subTasks->count() : 0;

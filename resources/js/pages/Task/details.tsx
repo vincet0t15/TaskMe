@@ -369,15 +369,14 @@ export default function TaskDetails({ task }: Props) {
                                     </span>
                                 </div>
                                 <Progress
-                                    value={progressPercentage}
-                                    className="h-3 w-full [&>div]:bg-green-500" // Custom color on progress bar
+                                    value={task.progress_percentage} // use your computed value
+                                    className="h-3 w-full [&>div]:bg-green-500"
                                 />
                             </div>
 
                             {/* Individual Assignee Progress */}
                             <div className="grid gap-4 md:grid-cols-2">
                                 {task.userHasSubTask?.map((user, index) => {
-                                    // Calculate individual assignee progress
                                     const userSubtasks = mockSubTasks.filter(
                                         (subtask) =>
                                             subtask.users?.some(
@@ -391,8 +390,8 @@ export default function TaskDetails({ task }: Props) {
                                         ).length;
                                     const userProgress =
                                         userSubtasks.length > 0
-                                            ? (completedUserSubtasks /
-                                                  userSubtasks.length) *
+                                            ? (user.completed_subtasks /
+                                                  user.total_subtasks) *
                                               100
                                             : 0;
 
@@ -428,8 +427,8 @@ export default function TaskDetails({ task }: Props) {
                                                     variant="secondary"
                                                     className="text-xs font-medium"
                                                 >
-                                                    {completedUserSubtasks}/
-                                                    {userSubtasks.length} tasks
+                                                    {user.completed_subtasks}/
+                                                    {user.total_subtasks} tasks
                                                 </Badge>
                                             </div>
 
@@ -471,15 +470,15 @@ export default function TaskDetails({ task }: Props) {
                                     variant="default"
                                     className="bg-green-500 font-medium text-white"
                                 >
-                                    {completedSubTasks}/{totalSubTasks}{' '}
-                                    completed
+                                    {task.completed_subtasks_count}/
+                                    {task.total_subtasks} completed
                                 </Badge>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {/* Subtasks List */}
                             <div className="space-y-3">
-                                {mockTask.sub_tasks.map((subtask, index) => (
+                                {task.sub_tasks.map((subtask, index) => (
                                     <div
                                         key={index}
                                         className="flex items-center justify-between rounded-xl border p-4 transition-all duration-200 hover:bg-muted/50 hover:shadow-lg dark:hover:bg-muted/20"

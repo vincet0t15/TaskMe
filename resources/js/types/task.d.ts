@@ -13,6 +13,11 @@ export type TaskForm = {
     assignees: number[];
 };
 
+export interface UserWithSubTaskCounts extends User {
+    total_subtasks: number;
+    completed_subtasks: number;
+}
+
 export interface TaskInterface {
     id: number;
     name: string;
@@ -27,6 +32,7 @@ export interface TaskInterface {
     sub_tasks: SubTaskInterface[];
     completed_subtasks_count?: number;
     progress_percentage?: number;
-    userHasSubTask?: User[];
+    userHasSubTask?: UserWithSubTaskCounts[];
     assignees_count?: number;
+    total_subtasks?: number;
 }
