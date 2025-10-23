@@ -63,6 +63,10 @@ export default function TableList({ list, tasks }: Props) {
         );
     }
 
+    function handleEventClick(data: any) {
+        console.log(data.event.id);
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <ListLayout list={list}>
@@ -77,6 +81,7 @@ export default function TableList({ list, tasks }: Props) {
                         eventDrop={handleEventDrop}
                         expandRows={true}
                         dayMaxEvents={true}
+                        eventClick={handleEventClick}
                         // eventContent={renderEventContent}
                         // height="auto"
                     />
