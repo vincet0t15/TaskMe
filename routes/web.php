@@ -42,6 +42,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('spaces/tasks/{task}', [TaskController::class, 'details'])->name('details.show');
     // Calendar
     Route::get('calendar/{list}', [CalendarController::class, 'show'])->name('calendar.show');
+    Route::put('calendar/{task}', [CalendarController::class, 'moveData'])->name('calendar.move');
+
 
     // Kanban
     Route::get('spaces/kanban/{list}', [KanbanController::class, 'show'])->name('kanban.show');

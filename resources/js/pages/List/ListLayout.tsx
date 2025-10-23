@@ -81,7 +81,7 @@ export default function ListLayout({
                     </Button>
                 </div>
             </div>
-            <div className="mt-4 rounded-md bg-transparent p-2">{children}</div>
+            <div className="mt-4 rounded-md bg-transparent">{children}</div>
             {openCreateTask && (
                 <CreateTaskDialog
                     open={openCreateTask}
