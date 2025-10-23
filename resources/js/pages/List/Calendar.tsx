@@ -1,3 +1,4 @@
+import TaskController from '@/actions/App/Http/Controllers/TaskController';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import calendar from '@/routes/calendar';
@@ -64,7 +65,7 @@ export default function TableList({ list, tasks }: Props) {
     }
 
     function handleEventClick(data: any) {
-        console.log(data.event.id);
+        router.get(TaskController.details.url(data.event.id));
     }
 
     return (
