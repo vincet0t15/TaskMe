@@ -21,17 +21,16 @@ export default function ListLayout({
 
     return (
         <div className="p-4">
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => window.history.back()}
+                className="mb-4 flex w-fit cursor-pointer items-center gap-2 rounded-lg p-2 text-sm font-medium text-slate-300 transition hover:bg-sidebar hover:text-white"
+            >
+                <ChevronLeft className="h-4 w-4" />
+                Back
+            </Button>
             <div className="rounded-md bg-sidebar p-4">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => window.history.back()}
-                    className="flex w-fit cursor-pointer items-center gap-2 rounded-lg text-sm font-medium text-slate-300 transition hover:bg-sidebar hover:text-white"
-                >
-                    <ChevronLeft className="h-4 w-4" />
-                    Back
-                </Button>
-
                 {/* Header Section */}
                 <div className="flex w-full items-start justify-between">
                     {/* Left: Title, description, and details */}

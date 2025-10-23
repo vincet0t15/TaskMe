@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useInitials } from '@/hooks/use-initials';
@@ -8,6 +9,7 @@ import { dashboard } from '@/routes';
 import { BreadcrumbItem } from '@/types';
 import { TaskInterface } from '@/types/task';
 import { Head } from '@inertiajs/react';
+import { ChevronLeft } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -22,19 +24,26 @@ interface Props {
 }
 
 export default function TaskDetails({ task }: Props) {
-    console.log(task);
     const initials = useInitials();
     const [showMore, setShowMore] = useState(false);
     const description = task.description;
     const maxLength = 120;
 
-    // Calculate progress based on completed subtasks
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`${task.name} - Task Details`} />
-            <div className="min-h-screen">
-                <div className="container mx-auto space-y-10 p-4">
+            <div className="min-h-screen p-4">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => window.history.back()}
+                    className="mb-4 flex w-fit cursor-pointer items-center gap-2 rounded-lg p-2 text-sm font-medium text-slate-300 transition hover:bg-sidebar hover:text-white"
+                >
+                    <ChevronLeft className="h-4 w-4" />
+                    Back
+                </Button>
+
+                <div className="container mx-auto space-y-10">
                     {/* ENHANCED HERO SECTION */}
                     <div className="relative overflow-hidden rounded-2xl bg-sidebar p-6 shadow-xl">
                         {/* Subtle background flair */}
@@ -64,9 +73,6 @@ export default function TaskDetails({ task }: Props) {
                         </div>
                     </div>
 
-                    {/* --- */}
-
-                    {/* ENHANCED OVERVIEW CARDS */}
                     {/* Added a modern grid layout and simplified card styles for a cleaner look */}
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                         {/* Priority Card - Bold Red */}
@@ -147,8 +153,6 @@ export default function TaskDetails({ task }: Props) {
                             </CardContent>
                         </Card>
                     </div>
-
-                    {/* --- */}
 
                     {/* ASSIGNEES PROGRESS SECTION */}
                     <Card className="bg-muted/50">
@@ -267,8 +271,6 @@ export default function TaskDetails({ task }: Props) {
                         </CardContent>
                     </Card>
 
-                    {/* --- */}
-
                     {/* SUBTASKS PROGRESS SECTION */}
                     <Card className="bg-muted/50">
                         <CardHeader>
@@ -294,16 +296,11 @@ export default function TaskDetails({ task }: Props) {
                                         <div className="flex items-start space-x-4">
                                             {/* Status Indicator / Checkmark */}
                                             <div
-                                                className={`mt-1 h-3 w-3 flex-shrink-0 rounded-full ${
-                                                    subtask.status.name ===
-                                                    'Completed'
-                                                        ? 'bg-green-500'
-                                                        : subtask.status
-                                                                .name ===
-                                                            'In Progress'
-                                                          ? 'animate-pulse bg-yellow-500'
-                                                          : 'bg-gray-400'
-                                                }`}
+                                                style={{
+                                                    backgroundColor:
+                                                        subtask.status.color,
+                                                }}
+                                                className={`mt-1 h-3 w-3 flex-shrink-0 rounded-full`}
                                             ></div>
 
                                             {/* Subtask Info */}

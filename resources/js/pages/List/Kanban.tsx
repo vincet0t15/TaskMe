@@ -35,7 +35,6 @@ interface Props {
 }
 
 export default function Kanban({ list, tasks }: Props) {
-    console.log(tasks);
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
@@ -50,16 +49,6 @@ export default function Kanban({ list, tasks }: Props) {
             href: dashboard().url,
         },
     ];
-
-    const getTransparentColor = (hex: string, opacity = 0.15) => {
-        if (!hex.startsWith('#')) return hex;
-        const bigint = parseInt(hex.slice(1), 16);
-        const r = (bigint >> 16) & 255;
-        const g = (bigint >> 8) & 255;
-        const b = bigint & 255;
-        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    };
-
     const [openCreateTask, setOpenCreateTask] = useState(false);
     const [openEditTask, setOpenEditTask] = useState(false);
     const [editTask, setEditTask] = useState<TaskInterface | null>(null);
@@ -78,20 +67,6 @@ export default function Kanban({ list, tasks }: Props) {
         setTask(task);
     };
 
-    const handleClickName = (task: TaskInterface) => {
-        setTask(task);
-        setOpenShow(true);
-    };
-
-    // const handleTest = () => {
-    //     router.visit(window.location.pathname, {
-    //         only: ['tasks'],
-    //         preserveScroll: true,
-    //         preserveState: true,
-    //     });
-
-    //     console.log(tasks);
-    // };
     useEffect(() => {
         if (task && tasks) {
             const updated = tasks
@@ -146,18 +121,18 @@ export default function Kanban({ list, tasks }: Props) {
                                                 className="group rounded-xl border border-slate-500 p-4 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700"
                                             >
                                                 {/* Header section — Priority + Task name */}
-                                                <div>
+                                                <div
+                                                    className="cursor-pointer"
+                                                    onClick={() =>
+                                                        router.get(
+                                                            TaskController.details.url(
+                                                                task.id,
+                                                            ),
+                                                        )
+                                                    }
+                                                >
                                                     <div className="mb-2 flex items-center justify-between">
-                                                        <span
-                                                            className="cursor-pointer truncate text-sm font-semibold text-slate-300 hover:font-bold"
-                                                            onClick={() =>
-                                                                router.get(
-                                                                    TaskController.details.url(
-                                                                        task.id,
-                                                                    ),
-                                                                )
-                                                            }
-                                                        >
+                                                        <span className="cursor-pointer truncate text-sm font-semibold text-slate-300 hover:font-bold">
                                                             {task.name}
                                                         </span>
                                                         <div className="flex items-center justify-center gap-2">
