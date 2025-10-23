@@ -71,42 +71,40 @@ class TaskController extends Controller
     public function details(Task $task)
     {
         $taskDetails = Task::with([
+            'users' => function ($query) use ($task) {
+                $query->with('subTasks', function ($q) use ($task) {
+                    $q->where('task_id', $task->id); // only subtasks under this task
+                })
+                    ->with(['subTasks' => function ($q) use ($task) {
+                        $q->where('task_id', $task->id)
+                            ->with(['status', 'priority']);
+                    }])
+                    ->withCount([
+                        'subTasks as completed_subtasks_count' => function ($q) use ($task) {
+                            $q->where('task_id', $task->id)
+                                ->where('status_id', 4); // completed only
+                        },
+                        'subTasks as total_subtasks' => function ($q) use ($task) {
+                            $q->where('task_id', $task->id);
+                        },
+                    ]);
+            },
             'priority',
             'status',
             'subTasks' => function ($query) {
                 $query->with(['priority', 'status', 'users']);
-            }
+            },
         ])
             ->withCount([
                 'subTasks as completed_subtasks_count' => function ($query) {
                     $query->where('status_id', 4);
                 },
                 'subTasks as total_subtasks',
-                'users as assignees_count'
+                'users as assignees_count',
             ])
             ->findOrFail($task->id);
 
-        // Load users who have subtasks for this task
-        $usersWithSubTasks = User::whereHas('subTasks', function ($query) use ($task) {
-            $query->where('task_id', $task->id);
-        })->get();
 
-        // Add total subtask and completed subtask counts for each user
-        foreach ($usersWithSubTasks as $user) {
-            $userSubTasks = $user->subTasks->filter(function ($subTask) use ($task) {
-                return $subTask->task_id === $task->id;
-            });
-
-            $totalSubTasks = $userSubTasks->count();
-            $completedSubTasks = $userSubTasks->filter(function ($subTask) {
-                return $subTask->status_id === 4; // Assuming 4 is completed status_id
-            })->count();
-
-            $user->total_subtasks = $totalSubTasks;
-            $user->completed_subtasks = $completedSubTasks;
-        }
-
-        $taskDetails->userHasSubTask = $usersWithSubTasks;
 
         // Ensure subTasks relationship exists
         $totalSubtasks = $taskDetails->subTasks ? $taskDetails->subTasks->count() : 0;

@@ -6,176 +6,10 @@ import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { BreadcrumbItem } from '@/types';
-import { PrioritiesInterface } from '@/types/priorities';
-import { StatusInterface } from '@/types/statuses';
-import { SubTaskInterface } from '@/types/subTask';
 import { TaskInterface } from '@/types/task';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
-// Static task data for demo (unchanged)
-const mockPriority: PrioritiesInterface = {
-    id: 1,
-    name: 'High',
-    color: '#ef4444',
-};
-const mockStatus: StatusInterface = {
-    id: 1,
-    name: 'In Progress',
-    color: '#f59e0b',
-    tasks: [],
-};
-
-const completedStatus: StatusInterface = {
-    id: 1,
-    name: 'Completed',
-    color: '#10b981',
-    tasks: [],
-};
-const inProgressStatus: StatusInterface = {
-    id: 2,
-    name: 'In Progress',
-    color: '#f59e0b',
-    tasks: [],
-};
-const todoStatus: StatusInterface = {
-    id: 3,
-    name: 'Todo',
-    color: '#6b7280',
-    tasks: [],
-};
-const mediumPriority: PrioritiesInterface = {
-    id: 2,
-    name: 'Medium',
-    color: '#f59e0b',
-};
-
-const mockSubTasks: SubTaskInterface[] = [
-    {
-        id: 1,
-        name: 'Design mockups',
-        description: 'Create initial design mockups',
-        priority_id: 1,
-        status_id: 1,
-        task_id: 1,
-        due_date: '2025-10-25',
-        priority: mockPriority,
-        status: completedStatus,
-        users: [
-            {
-                id: 1,
-                name: 'John Doe',
-                username: 'johndoe',
-                email_verified_at: null,
-                created_at: '',
-                updated_at: '',
-            },
-        ],
-    },
-    {
-        id: 2,
-        name: 'Implement frontend',
-        description: 'Build the frontend components',
-        priority_id: 1,
-        status_id: 2,
-        task_id: 1,
-        due_date: '2025-10-26',
-        priority: mockPriority,
-        status: inProgressStatus,
-        users: [
-            {
-                id: 2,
-                name: 'Jane Smith',
-                username: 'janesmith',
-                email_verified_at: null,
-                created_at: '',
-                updated_at: '',
-            },
-        ],
-    },
-    {
-        id: 3,
-        name: 'Setup backend',
-        description: 'Setup backend APIs',
-        priority_id: 1,
-        status_id: 3,
-        task_id: 1,
-        due_date: '2025-10-27',
-        priority: mockPriority,
-        status: todoStatus,
-        users: [
-            {
-                id: 3,
-                name: 'Mike Johnson',
-                username: 'mikej',
-                email_verified_at: null,
-                created_at: '',
-                updated_at: '',
-            },
-        ],
-    },
-    {
-        id: 4,
-        name: 'Testing',
-        description: 'Write unit tests',
-        priority_id: 2,
-        status_id: 3,
-        task_id: 1,
-        due_date: '2025-10-28',
-        priority: mediumPriority,
-        status: todoStatus,
-        users: [
-            {
-                id: 2,
-                name: 'Jane Smith',
-                username: 'janesmith',
-                email_verified_at: null,
-                created_at: '',
-                updated_at: '',
-            },
-        ],
-    },
-];
-
-const mockTask: TaskInterface = {
-    id: 1,
-    name: 'Build Task Management App',
-    description:
-        'Create a comprehensive task management application with subtasks, priorities, statuses, and user assignments.',
-    priority_id: 1,
-    status_id: 1,
-    list_task_id: 1,
-    due_date: '2025-11-15',
-    priority: mockPriority,
-    status: mockStatus,
-    users: [
-        {
-            id: 1,
-            name: 'John Doe',
-            username: 'johndoe',
-            email_verified_at: null,
-            created_at: '',
-            updated_at: '',
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            username: 'janesmith',
-            email_verified_at: null,
-            created_at: '',
-            updated_at: '',
-        },
-        {
-            id: 3,
-            name: 'Mike Johnson',
-            username: 'mikej',
-            email_verified_at: null,
-            created_at: '',
-            updated_at: '',
-        },
-    ],
-    sub_tasks: mockSubTasks,
-};
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
@@ -195,16 +29,10 @@ export default function TaskDetails({ task }: Props) {
     const maxLength = 120;
 
     // Calculate progress based on completed subtasks
-    const totalSubTasks = mockTask.sub_tasks.length;
-    const completedSubTasks = mockTask.sub_tasks.filter(
-        (st) => st.status.name === 'Completed',
-    ).length;
-    const progressPercentage =
-        totalSubTasks > 0 ? (completedSubTasks / totalSubTasks) * 100 : 0;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${mockTask.name} - Task Details`} />
+            <Head title={`${task.name} - Task Details`} />
             <div className="min-h-screen">
                 <div className="container mx-auto space-y-10 p-4">
                     {/* ENHANCED HERO SECTION */}
@@ -240,9 +68,9 @@ export default function TaskDetails({ task }: Props) {
                                         Due:
                                     </span>
                                     <p className="text-base font-semibold text-white">
-                                        {mockTask.due_date
+                                        {task.due_date
                                             ? new Date(
-                                                  mockTask.due_date,
+                                                  task.due_date,
                                               ).toLocaleDateString('en-US', {
                                                   month: 'short',
                                                   day: 'numeric',
@@ -356,44 +184,33 @@ export default function TaskDetails({ task }: Props) {
                         </CardHeader>
                         <CardContent>
                             {/* Overall Team Progress Bar */}
-                            <div className="mb-6 space-y-2 border-b pb-4">
-                                <div className="flex items-center justify-between text-base font-semibold">
-                                    <span>Overall Task Completion</span>
-                                    <span className="text-lg font-extrabold text-green-600 dark:text-green-400">
-                                        {task.progress_percentage
-                                            ? task.progress_percentage.toFixed(
-                                                  2,
-                                              )
-                                            : 0}
-                                        %
-                                    </span>
+                            {(task!.total_subtasks ?? 0) > 0 && (
+                                <div className="mb-6 space-y-2 border-b pb-4">
+                                    <div className="flex items-center justify-between text-base font-semibold">
+                                        <span>Overall Task Completion</span>
+                                        <span className="text-lg font-extrabold text-green-600 dark:text-green-400">
+                                            {task?.progress_percentage
+                                                ? task.progress_percentage.toFixed(
+                                                      2,
+                                                  )
+                                                : 0}
+                                            %
+                                        </span>
+                                    </div>
+                                    <Progress
+                                        value={task?.progress_percentage ?? 0}
+                                        className="h-3 w-full [&>div]:bg-green-500"
+                                    />
                                 </div>
-                                <Progress
-                                    value={task.progress_percentage} // use your computed value
-                                    className="h-3 w-full [&>div]:bg-green-500"
-                                />
-                            </div>
+                            )}
 
                             {/* Individual Assignee Progress */}
                             <div className="grid gap-4 md:grid-cols-2">
-                                {task.userHasSubTask?.map((user, index) => {
-                                    const userSubtasks = mockSubTasks.filter(
-                                        (subtask) =>
-                                            subtask.users?.some(
-                                                (u) => u.id === user.id,
-                                            ),
-                                    );
-                                    const completedUserSubtasks =
-                                        userSubtasks.filter(
-                                            (st) =>
-                                                st.status.name === 'Completed',
-                                        ).length;
+                                {task.users.map((user, index) => {
                                     const userProgress =
-                                        userSubtasks.length > 0
-                                            ? (user.completed_subtasks /
-                                                  user.total_subtasks) *
-                                              100
-                                            : 0;
+                                        (user.completed_subtasks_count /
+                                            user.total_subtasks) *
+                                        100;
 
                                     return (
                                         <div
@@ -404,8 +221,6 @@ export default function TaskDetails({ task }: Props) {
                                                 <div className="flex items-center space-x-3">
                                                     <Avatar className="h-10 w-10 border-2 border-background shadow-sm">
                                                         <AvatarFallback className="bg-blue-600 text-sm font-semibold text-white">
-                                                            {' '}
-                                                            {/* Better avatar color */}
                                                             {initials(
                                                                 user.name,
                                                             )}
@@ -422,32 +237,44 @@ export default function TaskDetails({ task }: Props) {
                                                         </p>
                                                     </div>
                                                 </div>
-
-                                                <Badge
-                                                    variant="secondary"
-                                                    className="text-xs font-medium"
-                                                >
-                                                    {user.completed_subtasks}/
-                                                    {user.total_subtasks} tasks
-                                                </Badge>
+                                                {user.total_subtasks > 0 && (
+                                                    <Badge
+                                                        variant="secondary"
+                                                        className="text-xs font-medium"
+                                                    >
+                                                        {
+                                                            user.completed_subtasks_count
+                                                        }
+                                                        /{user.total_subtasks}{' '}
+                                                        tasks (
+                                                        {Math.round(
+                                                            (user.completed_subtasks_count /
+                                                                user.total_subtasks) *
+                                                                100,
+                                                        )}
+                                                        %)
+                                                    </Badge>
+                                                )}
                                             </div>
 
                                             {/* Individual Progress Bar */}
-                                            <div className="space-y-1">
-                                                <div className="flex justify-between text-xs font-medium text-muted-foreground">
-                                                    <span>Completion</span>
-                                                    <span>
-                                                        {userProgress.toFixed(
-                                                            0,
-                                                        )}
-                                                        %
-                                                    </span>
+                                            {user.total_subtasks > 0 && (
+                                                <div className="space-y-1">
+                                                    <div className="flex justify-between text-xs font-medium text-muted-foreground">
+                                                        <span>Completion</span>
+                                                        <span>
+                                                            {userProgress.toFixed(
+                                                                0,
+                                                            )}
+                                                            %
+                                                        </span>
+                                                    </div>
+                                                    <Progress
+                                                        value={userProgress}
+                                                        className="h-2 [&>div]:bg-purple-500" // Custom color
+                                                    />
                                                 </div>
-                                                <Progress
-                                                    value={userProgress}
-                                                    className="h-2 [&>div]:bg-purple-500" // Custom color
-                                                />
-                                            </div>
+                                            )}
                                         </div>
                                     );
                                 }) || (
@@ -557,7 +384,7 @@ export default function TaskDetails({ task }: Props) {
                                     </div>
                                 ))}
 
-                                {mockTask.sub_tasks.length === 0 && (
+                                {task.sub_tasks.length === 0 && (
                                     <div className="py-8 text-center text-muted-foreground">
                                         No subtasks added yet 📝
                                     </div>

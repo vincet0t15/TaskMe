@@ -47,8 +47,8 @@ export function Subtask({ subTask }: Props) {
                 </DrawerTrigger>
             </DrawerTrigger>
 
-            <DrawerContent className="h-screen w-[700px] overflow-hidden bg-sidebar">
-                <div className="scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent mx-auto h-full max-w-sm overflow-y-auto">
+            <DrawerContent className="h-screen overflow-hidden bg-sidebar">
+                <div className="scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent h-full overflow-y-auto">
                     {/* Header */}
                     <DrawerHeader className="sticky top-0 z-10 border-muted bg-sidebar px-4 sm:px-6">
                         <DrawerTitle className="text-lg font-semibold sm:text-xl">
